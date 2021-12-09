@@ -4,6 +4,10 @@
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_blank
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @param Y an observation matrix. The row corresponds to time steps and the column corresponds to variables.
@@ -105,7 +109,7 @@ TREC1 <- function(Y){
     fig.ctrend <- ggplot(ggD3) +
       geom_line(aes(x=x, y=y)) +
       geom_line(aes(x=x, y=t), col="red")+
-      facet_wrap(. ~ V, scale="free") +
+      facet_wrap(. ~ V, scales="free") +
       theme(axis.title = element_blank())
   } else
   {
