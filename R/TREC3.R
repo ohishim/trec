@@ -113,8 +113,6 @@ TREC3 <- function(trn, tnum, argTREC){
 
   yr <- ggD$y %>% range
 
-  img <- lapply(1:10, function(j){readPNG(paste0("fig", "\\", "icon", j, ".png"))})
-
   Labs <- ggD$V %>% unique %>% sort
 
   figs <- lapply(1:length(Labs), function(j){
