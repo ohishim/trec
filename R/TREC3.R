@@ -7,6 +7,7 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 facet_wrap
+#' @importFrom ggplot2 annotation_raster
 #' @importFrom tidyr gather
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
