@@ -3,6 +3,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @param Y an observation matrix. The row corresponds to time steps and the column corresponds to variables.
