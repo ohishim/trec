@@ -8,6 +8,7 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 annotation_raster
+#' @importFrom ggplot2 ylim
 #' @importFrom tidyr gather
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
