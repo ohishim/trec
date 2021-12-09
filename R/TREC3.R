@@ -59,7 +59,7 @@ TREC3 <- function(trn, tnum, argTREC){
   TR <- argTREC$TR
   p <- ncol(TR)
 
-  tnum <- sotr(tnum)
+  tnum <- sort(tnum)
 
   TGTR <- TR[,tnum]
 
