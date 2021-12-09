@@ -11,15 +11,10 @@ The goal of trec is to ...
 You can install the development version of trec like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+# install.packages("devtools")
+devtools::install_github("ohishim/trec")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(trec)
-## basic example code
-```
-
+Please see the file "example/example.html".
