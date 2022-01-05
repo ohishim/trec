@@ -1,6 +1,6 @@
 Package: trec
 Type: Package
-Title: Estimation and classification of temporal trends
+Title: Trend estimation and classification for time series data
 Version: 0.1.0
 Author: Mineaki Ohishi & Hiroko Kato Solvang
 Maintainer: Mineaki Ohishi <mineaki-ohishi@hiroshima-u.ac.jp> & Hiroko Kato Solvang <hiroko.solvang@hi.no>
