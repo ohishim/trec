@@ -40,18 +40,19 @@ plot(res1$fig.trend)
 
 ### the second step
 
-First, you have to select two representative trends.
+First, you have to select two representative trends for two-categorical discrimination to get rough common trend classification.
 This step is executed as follows:
 
 ``` r
-#representative trends
+#input two representative trends 
 pnum <- c(2, 7)
 
 #execute this step
 TREC2(pnum, res1$argTREC)
 ```
 
-A dendrogram for the trends is drawn and you have the following message:  
+A dendrogram for the trend groups obatined by two-categorical discrimination based on the representative trends (pnum) is illustrated.
+Then, you have the following message:  
 `Do you want to more concrete classification? Please enter yes or no: `.  
 
 
