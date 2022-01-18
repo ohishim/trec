@@ -56,8 +56,8 @@ A dendrogram for the trends is drawn and you have the following message:
 
 
 1. a  
-  1. c  
-  1. d  
+    1. c  
+    1. d  
 1. b  
 
 
