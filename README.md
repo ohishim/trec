@@ -52,15 +52,15 @@ TREC2(pnum, res1$argTREC)
 ```
 
 A dendrogram for the trends is drawn and you have the following message:  
-'Do you want to more concrete classification? Please enter yes or no: '.  
+`Do you want to more concrete classification? Please enter yes or no: `.  
 
-If you enter "no", trec procedure terminates and you have group numbers as 'trn' object.
+If you enter "no", trec procedure terminates and you have group numbers as `trn` object.
 If you enter "yes", you have another message: 
-'Do you need some modifications? Please enter yes or no: '.  
+`Do you need some modifications? Please enter yes or no: `.  
 
-If "no", you select target trends as 'tnum' and then, can proceed the next step.
-If "yes", you can redefine groups and execute 'TREC2.1'.
-Here, you can use three objects 'trn', 'trn1', and 'trn2' to modify the groups, like this:
+If "no", you select target trends as `tnum` and then, can proceed the next step.
+If "yes", you can redefine groups and execute `TREC2.1`.
+Here, you can use three objects `trn`, `trn1`, and `trn2` to modify the groups, like this:
 
 ``` r
 trn[[1]] <- c(trn1, 2)  # variable numbers for group 1
