@@ -54,6 +54,13 @@ TREC2(pnum, res1$argTREC)
 A dendrogram for the trends is drawn and you have the following message:  
 `Do you want to more concrete classification? Please enter yes or no: `.  
 
+
+1. a
+  1. c
+  1. d
+1. b
+
+
 If you enter "no", trec procedure terminates and you have group numbers as `trn` object.
 If you enter "yes", you have another message: 
 `Do you need some modifications? Please enter yes or no: `.  
