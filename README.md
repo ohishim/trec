@@ -23,7 +23,7 @@ This is a basic example which shows you how to solve a common problem:
 ### the first step
 
 You can use an example dataset "exData" which has 9 variables with 20 time steps.
-This step is executed as follows:
+This step is conducted as follows:
 
 ``` r
 library(trec)
