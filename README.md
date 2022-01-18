@@ -51,26 +51,38 @@ pnum <- c(2, 7)
 TREC2(pnum, res1$argTREC)
 ```
 
-The output is a dendrogram for the trends.
+A dendrogram for the trends is drawn and you have the following message:  
+'Do you want to more concrete classification? Please enter yes or no: '.  
+
+If you enter "no", trec procedure terminates and you have group numbers as 'trn' object.
+If you enter "yes", you have another message: 
+'Do you need some modifications? Please enter yes or no: '.  
+
+If "no", you select target trends as 'tnum' and then, can proceed the next step.
+If "yes", you can redefine groups and execute 'TREC2.1'.
+Here, you can use three objects 'trn', 'trn1', and 'trn2' to modify the groups, like this:
+
+``` r
+trn[[1]] <- c(trn1, 2)  # variable numbers for group 1
+trn[[2]] <- trn2[-1]    # variable numbers for group 2
+
+# draw trends for each group
+TREC2.1(trn, res1$argTREC)
+```
+
+Then, you can proceed the next step.
 
 ### the last step
 
-First, you have to assign the trends into three groups and select target trends.
+First, you have to select target trends.
 This step is executed as follows:
 
 ``` r
-#groups
-trn <- list(
-  c(1, 2, 3, 4, 6, 9),
-  c(),
-  c(5, 7, 8)
-)
-
 #target trends
 tnum <- c(4, 1, 2, 8)
 
 #execute this step
-res3 <- TREC3(trn, tnum, res1$argTREC)
+res3 <- TREC3(tnum, res1$argTREC)
 ```
 
 Then, you can obtain a figure which shows the target trends and their assigned icons.
