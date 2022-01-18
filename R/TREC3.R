@@ -14,15 +14,14 @@
 #' @importFrom dplyr mutate
 #' @importFrom png readPNG
 #' @importFrom gridExtra grid.arrange
-#' @param trn a list. This has thee elements of which each element is a vector of indexes of variables for increasing/flat/decreasing trends.
 #' @param tnum a vector of indexes of variables for target trends.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
 #' @export
 #' @examples
-#' #TREC3(trn, tnum, argTREC)
+#' #TREC3(tnum, argTREC)
 
-TREC3 <- function(trn, tnum, argTREC){
+TREC3 <- function(tnum, argTREC){
 
   ##############################################################################
   ###   trends for each group
@@ -30,23 +29,25 @@ TREC3 <- function(trn, tnum, argTREC){
 
   ggD3 <- argTREC$ggD3
 
-  fig.trend1 <- ggD3 %>% subset(V %in% paste0("V", trn[[1]])) %>% ggplot() +
-    geom_line(aes(x=x, y=t, col=V)) +
-    theme(axis.title = element_blank())
-
-  if(length(trn[[2]]) > 0)
-  {
-    fig.trend2 <- ggD3 %>% subset(V %in% paste0("V", trn[[2]])) %>% ggplot() +
-      geom_line(aes(x=x, y=t, col=V)) +
-      theme(axis.title = element_blank())
-  } else
-  {
-    fig.trend2 <- NULL
-  }
-
-  fig.trend3 <- ggD3 %>% subset(V %in% paste0("V", trn[[3]])) %>% ggplot() +
-    geom_line(aes(x=x, y=t, col=V)) +
-    theme(axis.title = element_blank())
+  # @param trn a list. This has thee elements of which each element is a vector of indexes of variables for increasing/flat/decreasing trends.
+  #
+  # fig.trend1 <- ggD3 %>% subset(V %in% paste0("V", trn[[1]])) %>% ggplot() +
+  #   geom_line(aes(x=x, y=t, col=V)) +
+  #   theme(axis.title = element_blank())
+  #
+  # if(length(trn[[2]]) > 0)
+  # {
+  #   fig.trend2 <- ggD3 %>% subset(V %in% paste0("V", trn[[2]])) %>% ggplot() +
+  #     geom_line(aes(x=x, y=t, col=V)) +
+  #     theme(axis.title = element_blank())
+  # } else
+  # {
+  #   fig.trend2 <- NULL
+  # }
+  #
+  # fig.trend3 <- ggD3 %>% subset(V %in% paste0("V", trn[[3]])) %>% ggplot() +
+  #   geom_line(aes(x=x, y=t, col=V)) +
+  #   theme(axis.title = element_blank())
 
   ##############################################################################
   ###   Set target trend corresponding to icon
@@ -144,9 +145,9 @@ TREC3 <- function(trn, tnum, argTREC){
   ##############################################################################
 
   Out <- list(
-    fig.trend1 = fig.trend1,
-    fig.trend2 = fig.trend2,
-    fig.trend3 = fig.trend3,
+    # fig.trend1 = fig.trend1,
+    # fig.trend2 = fig.trend2,
+    # fig.trend3 = fig.trend3,
     fig.tgtrend.G = fig.tgtrend.G,
     fig.tgtrend = fig.tgtrend,
     fig.icon = fig.icon

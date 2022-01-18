@@ -4,11 +4,9 @@
 \alias{TREC3}
 \title{The third step of TREC}
 \usage{
-TREC3(trn, tnum, argTREC)
+TREC3(tnum, argTREC)
 }
 \arguments{
-\item{trn}{a list. This has thee elements of which each element is a vector of indexes of variables for increasing/flat/decreasing trends.}
-
 \item{tnum}{a vector of indexes of variables for target trends.}
 
 \item{argTREC}{the output "argTREC" of TREC1.}
@@ -20,5 +18,5 @@ some figures for trends and assigned icons
 \code{TREC3} This function performs clustering for trends.
 }
 \examples{
-#TREC3(trn, tnum, argTREC)
+#TREC3(tnum, argTREC)
 }

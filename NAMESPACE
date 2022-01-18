@@ -2,6 +2,7 @@
 
 export(TREC1)
 export(TREC2)
+export(TREC2.1)
 export(TREC3)
 export(icon.asgn)
 importFrom(dendextend,set)
