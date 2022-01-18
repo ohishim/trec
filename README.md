@@ -62,14 +62,14 @@ A dendrogram for the trends is drawn and you have the following message:
       you can redefine groups and execute `TREC2.1`.
       Here, you can use three objects `trn`, `trn1`, and `trn2` to modify the groups, like this:
 
-      ``` r
-      trn[[1]] <- c(trn1, 2)  # variable numbers for group 1
-      trn[[2]] <- trn2[-1]    # variable numbers for group 2
-      
-      # draw trends for each group
-      TREC2.1(trn, res1$argTREC)
-      ```
-      Then, you can proceed the next step.
+        ``` r
+        trn[[1]] <- c(trn1, 2)  # variable numbers for group 1
+        trn[[2]] <- trn2[-1]    # variable numbers for group 2
+        
+        # draw trends for each group
+        TREC2.1(trn, res1$argTREC)
+        ```
+        Then, you can proceed the next step.
     1. If "no": 
       you select target trends as `tnum` and then, can proceed the next step.
       
