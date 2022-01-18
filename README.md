@@ -55,10 +55,10 @@ A dendrogram for the trends is drawn and you have the following message:
 `Do you want to more concrete classification? Please enter yes or no: `.  
 
 
-1. a
-  1. c
-  1. d
-1. b
+1. a  
+  1. c  
+  1. d  
+1. b  
 
 
 If you enter "no", trec procedure terminates and you have group numbers as `trn` object.
