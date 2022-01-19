@@ -10,21 +10,6 @@
 #' @examples
 #' #TREC2(pnum, argTREC)
 
-# TREC2 <- function(pnum, argTREC){
-#
-#   TR <- argTREC$TR
-#   p <- ncol(TR)
-#
-#   t1 <- TR[,pnum[1]]
-#   t2 <- TR[,pnum[2]]
-#
-#   dd <- sapply(1:p, function(j){
-#     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
-#   })
-#
-#   dd %>% dist %>% hclust %>% as.dendrogram %>% set("branches_k_color", k=2) %>% plot
-# }
-
 TREC2 <- function(pnum, argTREC){
   TR <- argTREC$TR
   p <- ncol(TR)

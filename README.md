@@ -91,3 +91,12 @@ res3 <- TREC3(tnum, res1$argTREC)
 ```
 
 Then, you can obtain a figure which shows the target trends and their assigned icons.
+Moreover, you can obtain a discrimination corresponding to the target trends as follows:
+
+``` r
+#figure of group-wise trends
+plot(res3$fig.tgtrend.G)
+
+#variable numbers for each group
+res3$group
+```
