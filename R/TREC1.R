@@ -150,5 +150,7 @@ TREC1 <- function(Y){
     argTREC = argTREC
   )
 
+  plot(Out$fig.trend)
+
   return(Out)
 }
