@@ -81,7 +81,7 @@ This step is executed as follows:
 
 ``` r
 #target trends
-tnum <- c(4, 1, 2, 8)
+tnum <- c(1, 2, 4, 8)
 
 #execute this step
 res3 <- TREC3(tnum, res1$argTREC)
