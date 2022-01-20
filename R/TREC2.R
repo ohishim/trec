@@ -3,6 +3,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dendextend set
+#' @importFrom gridExtra grid.arrange
 #' @param pnum a vector of two indexes of variables for representative trends
 #' @param argTREC the output "argTREC" of TREC1
 #' @return a dendrogram
@@ -28,6 +29,10 @@ TREC2 <- function(pnum, argTREC){
   trn <<- lapply(1:2, function(j){which(cutree(HClust, k=2) == j)})
 
   plot(Dend)
+
+  out <- list(
+    dend = Dend
+  )
 
   ans <- ""
   while(!ans %in% c("yes", "no"))
@@ -65,7 +70,10 @@ TREC2 <- function(pnum, argTREC){
       cat("Select tnum and proceed TREC3.\n")
       cat("You have 'trn' object for TREC3.")
 
-      gridExtra::grid.arrange(fig.trend1, fig.trend2, ncol=2)
+      fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
+
+      out[[2]] <- fig.trends
+      names(out)[2] <- "fig.trends"
     } else
     {
       trn1 <<- trn[[1]]
@@ -80,4 +88,6 @@ TREC2 <- function(pnum, argTREC){
     cat("trec procedure terminates.\n")
     cat("You have group numbers as 'trn' object.")
   }
+
+  return(out)
 }
