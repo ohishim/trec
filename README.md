@@ -26,6 +26,8 @@ You can use an example dataset "exData" which has 9 variables with 20 time steps
 This step is executed as follows:
 
 ``` r
+library(trec)
+
 res1 <- TREC1(exData)
 ```
 Then, you have a figure of all trends.
