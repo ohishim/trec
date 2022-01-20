@@ -47,7 +47,7 @@ pnum <- c(2, 7)
 res2 <- TREC2(pnum, res1$argTREC)
 ```
 
-A dendrogram for the trend groups obatined by two-categorical discrimination based on the representative trends (pnum) is illustrated.
+A dendrogram for the trend groups obatined by two-categorical discrimination based on the representative trends `pnum` is illustrated.
 This dendrobram can be reconstructed by `plot(res2$dend)`.
 Then, you have the following message:  
 `Do you want to more concrete classification? Please enter yes or no: `.  
