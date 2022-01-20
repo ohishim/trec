@@ -89,7 +89,7 @@ tnum <- c(1, 2, 4, 8)
 res3 <- TREC3(tnum, res1$argTREC)
 ```
 
-Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain group numbers classified based on the target trends.
+Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain variable numbers for each group classified based on the target trends.
 These figure and group numbers are respectively reconstructed by `plot(res3$fig.tgtrend.G)` and `res3$group`.
 Moreover, you can obtain a figure of group-wise trends as
 
