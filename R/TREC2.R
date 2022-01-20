@@ -30,7 +30,7 @@ TREC2 <- function(pnum, argTREC){
 
   plot(Dend)
 
-  out <- list(
+  Out <- list(
     dend = Dend
   )
 
@@ -72,8 +72,8 @@ TREC2 <- function(pnum, argTREC){
 
       fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
 
-      out[[2]] <- fig.trends
-      names(out)[2] <- "fig.trends"
+      Out[[2]] <- fig.trends
+      names(Out)[2] <- "fig.trends"
     } else
     {
       trn1 <<- trn[[1]]
@@ -89,5 +89,5 @@ TREC2 <- function(pnum, argTREC){
     cat("You have group numbers as 'trn' object.")
   }
 
-  return(out)
+  return(Out)
 }

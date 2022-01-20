@@ -127,5 +127,8 @@ TREC3 <- function(tnum, argTREC){
     group = split(1:ncol(TR), L)
   )
 
+  cat("group numbers: \n")
+  print(Out$group)
+
   return(Out)
 }
