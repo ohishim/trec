@@ -68,7 +68,7 @@ TREC2 <- function(pnum, argTREC){
         theme(axis.title = element_blank())
 
       cat("Select tnum and proceed TREC3.\n")
-      cat("You have 'trn' object for TREC3.")
+      cat("You have 'trn' object for TREC3.\n")
 
       fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
 
@@ -80,13 +80,13 @@ TREC2 <- function(pnum, argTREC){
       trn2 <<- trn[[2]]
 
       cat("You can use three objects 'trn', 'trn1', and 'trn2' to modify the groups.\n")
-      cat("Redefine 'trn' and execute TREC2.1.")
+      cat("Redefine 'trn' and execute TREC2.1.\n")
     }
 
   } else
   {
     cat("trec procedure terminates.\n")
-    cat("You have group numbers as 'trn' object.")
+    cat("You have group numbers as 'trn' object.\n")
   }
 
   return(Out)

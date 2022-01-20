@@ -23,20 +23,14 @@ This is a basic example which shows you how to solve a common problem:
 ### the first step
 
 You can use an example dataset "exData" which has 9 variables with 20 time steps.
-This step is conducted as follows:
+This step is executed as follows:
 
 ``` r
-library(trec)
-
-#execute this step
 res1 <- TREC1(exData)
-
-#figure of estimated trends for standardized observations
-plot(res1$fig.ctrend)
-
-#figure of all trends
-plot(res1$fig.trend)
 ```
+Then, you have a figure of all trends.
+This figure can be reconstructed by `plot(res1$fig.trend)`.
+The trend fits are visible by `plot(res1$fig.ctrend)` where each variable is standardized.
 
 ### the second step
 
@@ -48,10 +42,11 @@ This step is executed as follows:
 pnum <- c(2, 7)
 
 #execute this step
-TREC2(pnum, res1$argTREC)
+res2 <- TREC2(pnum, res1$argTREC)
 ```
 
 A dendrogram for the trend groups obatined by two-categorical discrimination based on the representative trends (pnum) is illustrated.
+This dendrobram can be reconstructed by `plot(res2$dend)`.
 Then, you have the following message:  
 `Do you want to more concrete classification? Please enter yes or no: `.  
 
@@ -72,7 +67,9 @@ Then, you have the following message:
         ```
         Then, you can proceed the next step.
     1. If "no": 
-      you select target trends as `tnum` and then, can proceed the next step.
+      you have a figure of trends for each group.
+      This figure can be reconstructed by `plot(res2$fig.trends)`.
+      Then, you select target trends as `tnum` and can proceed the next step.
       
 1. If "no":  
   trec procedure terminates and you have group numbers as `trn` object.
@@ -90,13 +87,10 @@ tnum <- c(4, 1, 2, 8)
 res3 <- TREC3(tnum, res1$argTREC)
 ```
 
-Then, you can obtain a figure which shows the target trends and their assigned icons.
-Moreover, you can obtain a discrimination corresponding to the target trends as follows:
+Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain group numbers classified based on the target trends.
+These figure and group numbers are respectively reconstructed by `plot(res3$fig.tgtrend.G)` and `res3$group`.
+Moreover, you can obtain a figure of group-wise trends as
 
 ``` r
-#figure of group-wise trends
 plot(res3$fig.tgtrend.G)
-
-#variable numbers for each group
-res3$group
 ```

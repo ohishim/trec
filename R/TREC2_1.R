@@ -39,5 +39,5 @@ TREC2.1 <- function(trn, argTREC, groups=2){
     grid.arrange(fig.trend1, fig.trend2, fig.trend3, ncol=3)
   }
 
-  cat("Select tnum and proceed TREC3.")
+  cat("Select tnum and proceed TREC3.\n")
 }
