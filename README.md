@@ -78,6 +78,7 @@ Then, you have the following message:
         # draw trends for each group
         TREC2.1(trn, res1$argTREC, groups=3)
         ```
+        Then, you can proceed the next step.
     1. If "no": 
       you have a figure of trends for each group.
       This figure can be reconstructed by `plot(res2$fig.trends)`.
