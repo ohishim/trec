@@ -78,6 +78,9 @@ TREC3 <- function(tnum, argTREC){
 
   Y <- argTREC$Y
 
+  #images of icons
+  img <- lapply(1:10, function(j){readPNG(paste0("fig", "/", "icon", j, ".png"))})
+
   res <- data.frame(
     V = colnames(Y[,tnum]),
     icon = cbind(1, argTREC$dim, argTREC$coef)[tnum,] %>%  apply(1, icon.fit),
