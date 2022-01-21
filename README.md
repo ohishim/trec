@@ -56,7 +56,7 @@ Then, you have the following message:
 1. If "yes":  
   you have another message: 
   `Do you need some modifications? Please enter yes or no: `.  
-    1. If "yes":   
+    1. If "yes" (in the case of classification into two groups):   
       you can redefine groups and execute `TREC2.1`.
       Here, you can use three objects `trn`, `trn1`, and `trn2` to modify the groups, like this:
 
@@ -68,6 +68,16 @@ Then, you have the following message:
         TREC2.1(trn, res1$argTREC)
         ```
         Then, you can proceed the next step.
+    1. If "yes" (in the case of classification into three groups):  
+      you can classify into three groups as follows:  
+
+        ``` r
+        trn[[3]] <- trn2[1]   # variable numbers for group 3
+        trn[[2]] <- trn2[-1]  # variable numbers for group 2
+        
+        # draw trends for each group
+        TREC2.1(trn, res1$argTREC, groups=3)
+        ```
     1. If "no": 
       you have a figure of trends for each group.
       This figure can be reconstructed by `plot(res2$fig.trends)`.

@@ -4,6 +4,10 @@
 #' @importFrom magrittr %>%
 #' @importFrom dendextend set
 #' @importFrom gridExtra grid.arrange
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 ylim
 #' @param pnum a vector of two indexes of variables for representative trends
 #' @param argTREC the output "argTREC" of TREC1
 #' @return a dendrogram
@@ -59,13 +63,17 @@ TREC2 <- function(pnum, argTREC){
     {
       ggD3 <- argTREC$ggD3
 
+      ran <- range(ggD3$t)
+
       fig.trend1 <- ggD3 %>% subset(V %in% paste0("V", trn[[1]])) %>% ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
-        theme(axis.title = element_blank())
+        theme(axis.title = element_blank()) +
+        ylim(ran)
 
       fig.trend2 <- ggD3 %>% subset(V %in% paste0("V", trn[[2]])) %>% ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
-        theme(axis.title = element_blank())
+        theme(axis.title = element_blank()) +
+        ylim(ran)
 
       cat("Select tnum and proceed TREC3.\n")
       cat("You have 'trn' object for TREC3.\n")
