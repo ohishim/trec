@@ -98,8 +98,9 @@ TREC3 <- function(tnum, argTREC){
   yr <- ggD$y %>% range
 
   Labs <- ggD$V %>% unique %>% sort
+  Labs.n <- length(Labs)
 
-  figs <- lapply(1:length(Labs), function(j){
+  figs <- lapply(1:Labs.n, function(j){
     ggDj <- subset(ggD, V==Labs[j])
 
     figj <- ggplot() +
@@ -114,9 +115,20 @@ TREC3 <- function(tnum, argTREC){
       ylim(yr)
   })
 
+  if(Labs.n <= 3)
+  {
+    fig.col <- Labs.n
+  } else if(Labs.n == 4)
+  {
+    fig.col <- 2
+  } else
+  {
+    fig.col <- 3
+  }
+
   fig.icon <- do.call(
     grid.arrange,
-    c(figs, list(ncol=3))
+    c(figs, list(ncol=fig.col))
   )
 
   ##############################################################################
