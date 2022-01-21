@@ -9,9 +9,6 @@
 
 icon.fit <- function(x){
 
-  #estimates for fitting icons
-  BETA <- read.csv("data/coefficients.csv")
-
   if((x[1] == 1) & (abs(x[4]) <= 0.1))
   {
     out <- 1
