@@ -26,7 +26,7 @@ TREC2 <- function(pnum, argTREC){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
   })
 
-  HClust <- dd %>% dist %>% hclust
+  HClust <- dd %>% dist %>% hclust(method = "centroid")
 
   Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=2)
 
