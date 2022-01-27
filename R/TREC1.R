@@ -127,7 +127,7 @@ TREC1 <- function(Y){
   ##############################################################################
 
   fig.trend <- ggplot(ggD3) +
-    geom_line(aes(x=x, y=t, col=V), size=2) +
+    geom_line(aes(x=x, y=t, col=V), size=1) +
     theme(axis.title = element_blank())
 
   ##############################################################################
