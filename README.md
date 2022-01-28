@@ -36,16 +36,17 @@ The trend fits are visible by `plot(res1$fig.ctrend)` where each variable is sta
 
 ### the second step
 
-First, you have to select two representative trends for two-categorical discrimination to get rough common trend classification.
-This step is executed as follows:
+After the first step, you have an object `pnum` which has two variable numbers of representative trends.
+If you have no problem, the second step can be executed with the `pnum` as follows:
 
 ``` r
-#input two representative trends 
-pnum <- c(2, 7)
-
 #execute this step
 res2 <- TREC2(pnum, res1$argTREC)
 ```
+
+If `pnum` cannot be automatically defined, `pnum` has the following message:  
+`"'pnum' cannot be defined."`  
+In such a case, or when you want to modify `pnum`, you can manually define `pnum`.
 
 A dendrogram for the trend groups obatined by two-categorical discrimination based on the representative trends `pnum` is illustrated.
 This dendrobram can be reconstructed by `plot(res2$dend)`.

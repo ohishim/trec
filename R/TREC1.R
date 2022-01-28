@@ -127,8 +127,33 @@ TREC1 <- function(Y){
   ##############################################################################
 
   fig.trend <- ggplot(ggD3) +
-    geom_line(aes(x=x, y=t, col=V), size=1) +
+    geom_line(aes(x=x, y=t, col=V)) +
     theme(axis.title = element_blank())
+
+  ##############################################################################
+  ###   Representative trends selection
+  ##############################################################################
+
+  idx1 <- which(res$dim[,1] == 1)
+
+  if(length(idx1) < 2)
+  {
+    pnum <<- "'pnum' cannot be defined."
+  } else
+  {
+    Coef1 <- res$coef[,2][idx1]
+
+    if(length(unique(sign(Coef1))) == 1)
+    {
+      pnum <<- "'pnum' cannot be defined."
+    } else
+    {
+      pnum <<- c(
+        which.min(Coef1) %>% idx1[.],
+        which.max(Coef1) %>% idx1[.]
+      )
+    }
+  }
 
   ##############################################################################
   ###   Output
