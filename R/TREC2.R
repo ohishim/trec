@@ -15,8 +15,9 @@
 #' @examples
 #' #TREC2(pnum, argTREC)
 
-TREC2 <- function(pnum, argTREC){
+TREC2 <- function(pnum, argTREC, groups=2){
   TR <- argTREC$TR
+  # Vnames <- argTREC$Vnames
   p <- ncol(TR)
 
   t1 <- TR[,pnum[1]]
@@ -25,12 +26,13 @@ TREC2 <- function(pnum, argTREC){
   dd <- sapply(1:p, function(j){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
   })
+  names(dd) <- Vnames
 
   HClust <- dd %>% dist %>% hclust(method = "centroid")
 
-  Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=2)
+  Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
 
-  trn <<- lapply(1:2, function(j){which(cutree(HClust, k=2) == j)})
+  trn <<- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j)})
 
   plot(Dend)
 
@@ -46,12 +48,39 @@ TREC2 <- function(pnum, argTREC){
 
   if(ans == "yes")
   {
-    names(trn) <- c("trn1", "trn2")
+    names(trn) <- paste0("trn", 1:groups)
 
     cat(
       "The variables are divided the following two groups:\n"
     )
     print(trn)
+
+    ggD3 <- argTREC$ggD3
+
+    ran <- range(ggD3$t)
+
+    fig.trend1 <- ggD3 %>% subset(V %in% names(trn[[1]])) %>% ggplot() +
+      geom_line(aes(x=x, y=t, col=V)) +
+      theme(axis.title = element_blank()) +
+      ylim(ran)
+
+    fig.trend2 <- ggD3 %>% subset(V %in% names(trn[[2]])) %>% ggplot() +
+      geom_line(aes(x=x, y=t, col=V)) +
+      theme(axis.title = element_blank()) +
+      ylim(ran)
+
+    if(groups == 2)
+    {
+      fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
+    } else if(groups == 3)
+    {
+      fig.trend3 <- ggD3 %>% subset(V %in% names(trn[[3]])) %>% ggplot() +
+        geom_line(aes(x=x, y=t, col=V)) +
+        theme(axis.title = element_blank()) +
+        ylim(ran)
+
+      fig.trends <- grid.arrange(fig.trend1, fig.trend2, fig.trend3, ncol=3)
+    }
 
     ans1 <- ""
     while(!ans1 %in% c("yes", "no"))
@@ -61,31 +90,16 @@ TREC2 <- function(pnum, argTREC){
 
     if(ans1 == "no")
     {
-      ggD3 <- argTREC$ggD3
-
-      ran <- range(ggD3$t)
-
-      fig.trend1 <- ggD3 %>% subset(V %in% paste0("V", trn[[1]])) %>% ggplot() +
-        geom_line(aes(x=x, y=t, col=V)) +
-        theme(axis.title = element_blank()) +
-        ylim(ran)
-
-      fig.trend2 <- ggD3 %>% subset(V %in% paste0("V", trn[[2]])) %>% ggplot() +
-        geom_line(aes(x=x, y=t, col=V)) +
-        theme(axis.title = element_blank()) +
-        ylim(ran)
+      Out[[2]] <- fig.trends
+      names(Out)[2] <- "fig.trends"
 
       cat("Select tnum and proceed TREC3.\n")
       cat("You have 'trn' object for TREC3.\n")
-
-      fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
-
-      Out[[2]] <- fig.trends
-      names(Out)[2] <- "fig.trends"
     } else
     {
       trn1 <<- trn[[1]]
       trn2 <<- trn[[2]]
+      if(groups==3){trn3 <<- trn[[3]]}
 
       cat("You can use three objects 'trn', 'trn1', and 'trn2' to modify the groups.\n")
       cat("Redefine 'trn' and execute TREC2.1.\n")

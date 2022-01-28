@@ -50,11 +50,12 @@ TREC3 <- function(tnum, argTREC){
       out <- (TGTR - tj) %>% apply(2, function(x){sum(x^2)}) %>% which.min %>% tnum[.]
     }
     return(out)
-  })
+  }) %>% Vnames[.]
 
   ggD4 <- data.frame(
     V = ggD3$V %>% unique,
-    L = as.character(L) %>% factor(levels=as.character(tnum))
+    # L = as.character(L) %>% factor(levels=as.character(tnum))
+    L = factor(L, levels=Vnames)
   ) %>% left_join(ggD3, ., by="V")
 
   fig.tgtrend.G <- ggplot(ggD4) +
@@ -66,7 +67,7 @@ TREC3 <- function(tnum, argTREC){
   ###   the target trend plots
   #=============================================================================
 
-  fig.tgtrend <- ggD4 %>% subset(V %in% paste0("V", tnum)) %>%
+  fig.tgtrend <- ggD4 %>% subset(V %in% Vnames[tnum]) %>%
     ggplot() +
     geom_line(aes(x=x, y=t)) +
     facet_wrap(.~V) +
@@ -132,11 +133,14 @@ TREC3 <- function(tnum, argTREC){
   ###   Output
   ##############################################################################
 
+  Vnames0 <- Vnames
+  names(Vnames0) <- NULL
+
   Out <- list(
     fig.tgtrend.G = fig.tgtrend.G,
     fig.tgtrend = fig.tgtrend,
     fig.icon = fig.icon,
-    group = split(1:ncol(TR), L)
+    group = split(Vnames0, L)
   )
 
   cat("group numbers: \n")

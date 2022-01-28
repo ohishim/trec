@@ -55,15 +55,17 @@ TREC1 <- function(Y){
   ##############################################################################
 
   Y <- miss.inpol(Y0) %>% scale
+  p <- ncol(Y)
 
   idx.nan <- apply(Y, 2, function(y){all(is.nan(y))}) %>% which
   if(length(idx.nan) > 0){Y <- Y[,-idx.nan]}
 
+  Vnames <<- colnames(Y)
+  names(Vnames) <<- 1:p
+
   ##############################################################################
   ###   Standardization plots
   ##############################################################################
-
-  p <- ncol(Y)
 
   ggD2 <- data.frame(
     x = seq(0, 1, length=nrow(Y)),
@@ -152,6 +154,7 @@ TREC1 <- function(Y){
         which.min(Coef1) %>% idx1[.],
         which.max(Coef1) %>% idx1[.]
       )
+      names(pnum) <<- Vnames[pnum]
     }
   }
 
