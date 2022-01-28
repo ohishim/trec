@@ -33,6 +33,7 @@ res1 <- TREC1(exData)
 Then, you have a figure of all trends.
 This figure can be reconstructed by `plot(res1$fig.trend)`.
 The trend fits are visible by `plot(res1$fig.ctrend)` where each variable is standardized.
+If the number of variables is larger than 16, you should enter `plot(res1$fig.ctrend[[1]])`, `plot(res1$fig.ctrend[[2]])`, ... to output the figures.
 
 ### the second step
 
