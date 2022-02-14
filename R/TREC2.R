@@ -8,31 +8,40 @@
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 ylim
-#' @param pnum a vector of two indexes of variables for representative trends
 #' @param argTREC the output "argTREC" of TREC1
+#' @param pvar two variable labels for representative trends (option)
 #' @return a dendrogram
 #' @export
 #' @examples
-#' #TREC2(pnum, argTREC)
+#' #TREC2(argTREC)
 
-TREC2 <- function(pnum, argTREC, groups=2){
+TREC2 <- function(argTREC, pvar=NULL, groups=2){
+
   TR <- argTREC$TR
-  # Vnames <- argTREC$Vnames
+  Labs <- colnames(TR)
   p <- ncol(TR)
 
-  t1 <- TR[,pnum[1]]
-  t2 <- TR[,pnum[2]]
+  if(is.null(pvar))
+  {
+    x <- seq(0, 1, length=nrow(TR))
+    t1 <- x - 0.5
+    t2 <- - x + 0.5
+  } else
+  {
+    t1 <- TR[, which(Labs == pvar[1])]
+    t2 <- TR[, which(Labs == pvar[2])]
+  }
 
   dd <- sapply(1:p, function(j){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
   })
-  names(dd) <- Vnames
+  names(dd) <- Labs
 
   HClust <- dd %>% dist %>% hclust(method = "centroid")
 
   Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
 
-  trn <<- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j)})
+  trn <<- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
 
   plot(Dend)
 
@@ -51,7 +60,7 @@ TREC2 <- function(pnum, argTREC, groups=2){
     names(trn) <- paste0("trn", 1:groups)
 
     cat(
-      "The variables are divided the following two groups:\n"
+      "The variables are divided the following two/three groups: \n"
     )
     print(trn)
 
@@ -59,12 +68,12 @@ TREC2 <- function(pnum, argTREC, groups=2){
 
     ran <- range(ggD3$t)
 
-    fig.trend1 <- ggD3 %>% subset(V %in% names(trn[[1]])) %>% ggplot() +
+    fig.trend1 <- ggD3 %>% subset(V %in% trn[[1]]) %>% ggplot() +
       geom_line(aes(x=x, y=t, col=V)) +
       theme(axis.title = element_blank()) +
       ylim(ran)
 
-    fig.trend2 <- ggD3 %>% subset(V %in% names(trn[[2]])) %>% ggplot() +
+    fig.trend2 <- ggD3 %>% subset(V %in% trn[[2]]) %>% ggplot() +
       geom_line(aes(x=x, y=t, col=V)) +
       theme(axis.title = element_blank()) +
       ylim(ran)
@@ -74,7 +83,7 @@ TREC2 <- function(pnum, argTREC, groups=2){
       fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
     } else if(groups == 3)
     {
-      fig.trend3 <- ggD3 %>% subset(V %in% names(trn[[3]])) %>% ggplot() +
+      fig.trend3 <- ggD3 %>% subset(V %in% trn[[3]]) %>% ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
         theme(axis.title = element_blank()) +
         ylim(ran)
@@ -93,22 +102,30 @@ TREC2 <- function(pnum, argTREC, groups=2){
       Out[[2]] <- fig.trends
       names(Out)[2] <- "fig.trends"
 
-      cat("Select tnum and proceed TREC3.\n")
+      cat("Select tvar and proceed TREC3.\n")
       cat("You have 'trn' object for TREC3.\n")
     } else
     {
       trn1 <<- trn[[1]]
       trn2 <<- trn[[2]]
-      if(groups==3){trn3 <<- trn[[3]]}
 
-      cat("You can use three objects 'trn', 'trn1', and 'trn2' to modify the groups.\n")
-      cat("Redefine 'trn' and execute TREC2.1.\n")
+      if(groups==2)
+      {
+        cat("You can use three objects 'trn', 'trn1', and 'trn2' to modify the groups.\n")
+        cat("Redefine 'trn' and execute TREC2.1.\n")
+      } else
+      {
+        trn3 <<- trn[[3]]
+
+        cat("You can use three objects 'trn', 'trn1', 'trn2', and 'trn3' to modify the groups.\n")
+        cat("Redefine 'trn' and execute TREC2.1.\n")
+      }
     }
 
   } else
   {
     cat("trec procedure terminates.\n")
-    cat("You have group numbers as 'trn' object.\n")
+    cat("You have variables for each group as 'trn' object.\n")
   }
 
   return(Out)

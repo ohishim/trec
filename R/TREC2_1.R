@@ -8,7 +8,7 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 ylim
 #' @importFrom gridExtra grid.arrange
-#' @param trn a list. This has thee elements of which each element is a vector of indexes of variables for increasing/flat/decreasing trends.
+#' @param trn a list that has thee elements of which each element is a vector of variable labels for increasing/flat/decreasing trends.
 #' @param argTREC the output "argTREC" of TREC1
 #' @param groups The number of groups corresponding to "trn".
 #' @return a figure
@@ -18,21 +18,16 @@
 
 TREC2.1 <- function(trn, argTREC, groups=2){
 
-  # Vnames <- argTREC$Vnames
   ggD3 <- argTREC$ggD3
-
-  names(trn[[1]]) <- Vnames[trn[[1]]]
-  names(trn[[2]]) <- Vnames[trn[[2]]]
-  if(groups == 3){names(trn[[3]]) <- Vnames[trn[[3]]]}
 
   ran <- range(ggD3$t)
 
-  fig.trend1 <- ggD3 %>% subset(V %in% names(trn[[1]])) %>% ggplot() +
+  fig.trend1 <- ggD3 %>% subset(V %in% trn[[1]]) %>% ggplot() +
     geom_line(aes(x=x, y=t, col=V)) +
     theme(axis.title = element_blank()) +
     ylim(ran)
 
-  fig.trend2 <- ggD3 %>% subset(V %in% names(trn[[2]])) %>% ggplot() +
+  fig.trend2 <- ggD3 %>% subset(V %in% trn[[2]]) %>% ggplot() +
     geom_line(aes(x=x, y=t, col=V)) +
     theme(axis.title = element_blank()) +
     ylim(ran)
@@ -42,7 +37,7 @@ TREC2.1 <- function(trn, argTREC, groups=2){
     grid.arrange(fig.trend1, fig.trend2, ncol=2)
   } else if(groups == 3)
   {
-    fig.trend3 <- ggD3 %>% subset(V %in% names(trn[[3]])) %>% ggplot() +
+    fig.trend3 <- ggD3 %>% subset(V %in% trn[[3]]) %>% ggplot() +
       geom_line(aes(x=x, y=t, col=V)) +
       theme(axis.title = element_blank()) +
       ylim(ran)
@@ -50,5 +45,5 @@ TREC2.1 <- function(trn, argTREC, groups=2){
     grid.arrange(fig.trend1, fig.trend2, fig.trend3, ncol=3)
   }
 
-  cat("If you have no problem, select tnum and proceed TREC3.\n")
+  cat("If you have no problem, select tvar and proceed TREC3.\n")
 }

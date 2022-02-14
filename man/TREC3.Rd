@@ -4,10 +4,10 @@
 \alias{TREC3}
 \title{The third step of TREC}
 \usage{
-TREC3(tnum, argTREC)
+TREC3(tvar, argTREC)
 }
 \arguments{
-\item{tnum}{a vector of indexes of variables for target trends.}
+\item{tvar}{a vector of variable labels for target trends.}
 
 \item{argTREC}{the output "argTREC" of TREC1.}
 }

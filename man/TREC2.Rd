@@ -4,12 +4,12 @@
 \alias{TREC2}
 \title{The second step of TREC}
 \usage{
-TREC2(pnum, argTREC)
+TREC2(argTREC, pvar = NULL, groups = 2)
 }
 \arguments{
-\item{pnum}{a vector of two indexes of variables for representative trends}
-
 \item{argTREC}{the output "argTREC" of TREC1}
+
+\item{pvar}{two variable labels for representative trends (option)}
 }
 \value{
 a dendrogram
@@ -18,5 +18,5 @@ a dendrogram
 \code{TREC2} This function performs clustering for trends.
 }
 \examples{
-#TREC2(pnum, argTREC)
+#TREC2(argTREC)
 }

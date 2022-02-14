@@ -14,14 +14,14 @@
 #' @importFrom dplyr mutate
 #' @importFrom png readPNG
 #' @importFrom gridExtra grid.arrange
-#' @param tnum a vector of indexes of variables for target trends.
+#' @param tvar a vector of variable labels for target trends.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
 #' @export
 #' @examples
 #' #TREC3(tnum, argTREC)
 
-TREC3 <- function(tnum, argTREC){
+TREC3 <- function(tvar, argTREC){
 
   ggD3 <- argTREC$ggD3
 
@@ -34,9 +34,10 @@ TREC3 <- function(tnum, argTREC){
   #=============================================================================
 
   TR <- argTREC$TR
+  Labs <- colnames(TR)
   p <- ncol(TR)
 
-  tnum <- sort(tnum)
+  tnum <- which(Labs %in% tvar) %>% sort
 
   TGTR <- TR[,tnum]
 
@@ -50,12 +51,11 @@ TREC3 <- function(tnum, argTREC){
       out <- (TGTR - tj) %>% apply(2, function(x){sum(x^2)}) %>% which.min %>% tnum[.]
     }
     return(out)
-  }) %>% Vnames[.]
+  }) %>% Labs[.]
 
   ggD4 <- data.frame(
     V = ggD3$V %>% unique,
-    # L = as.character(L) %>% factor(levels=as.character(tnum))
-    L = factor(L, levels=Vnames)
+    L = factor(L, levels=Labs)
   ) %>% left_join(ggD3, ., by="V")
 
   fig.tgtrend.G <- ggplot(ggD4) +
@@ -67,7 +67,7 @@ TREC3 <- function(tnum, argTREC){
   ###   the target trend plots
   #=============================================================================
 
-  fig.tgtrend <- ggD4 %>% subset(V %in% Vnames[tnum]) %>%
+  fig.tgtrend <- ggD4 %>% subset(V %in% tvar) %>%
     ggplot() +
     geom_line(aes(x=x, y=t)) +
     facet_wrap(.~V) +
@@ -95,11 +95,10 @@ TREC3 <- function(tnum, argTREC){
 
   yr <- ggD$y %>% range
 
-  Labs <- ggD$V %>% unique %>% sort
-  Labs.n <- length(Labs)
+  tvar.n <- length(tvar)
 
-  figs <- lapply(1:Labs.n, function(j){
-    ggDj <- subset(ggD, V==Labs[j])
+  figs <- lapply(1:tvar.n, function(j){
+    ggDj <- subset(ggD, V==tvar[j])
 
     figj <- ggplot() +
       geom_line(data=ggDj, aes(x=x, y=y)) +
@@ -113,10 +112,10 @@ TREC3 <- function(tnum, argTREC){
       ylim(yr)
   })
 
-  if(Labs.n <= 3)
+  if(tvar.n <= 3)
   {
-    fig.col <- Labs.n
-  } else if(Labs.n == 4)
+    fig.col <- tvar.n
+  } else if(tvar.n == 4)
   {
     fig.col <- 2
   } else
@@ -133,17 +132,14 @@ TREC3 <- function(tnum, argTREC){
   ###   Output
   ##############################################################################
 
-  Vnames0 <- Vnames
-  names(Vnames0) <- NULL
-
   Out <- list(
     fig.tgtrend.G = fig.tgtrend.G,
     fig.tgtrend = fig.tgtrend,
     fig.icon = fig.icon,
-    group = split(Vnames0, L)
+    group = split(Labs, L)
   )
 
-  cat("group numbers: \n")
+  cat("variables for each group: \n")
   print(Out$group)
 
   return(Out)

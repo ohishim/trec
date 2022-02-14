@@ -18,19 +18,36 @@
 
 TREC1 <- function(Y){
 
+  k <- ncol(Y)
+  Labs <- paste0("V", 1:k)
   Y0 <- Y
+
+  if(!all(Labs == names(Y0)))
+  {
+    Vnames <- data.frame(names(Y0) %>% t)
+    names(Vnames) <- Labs
+
+    names(Y) <- Labs
+    names(Y0) <- paste0(Labs, " (", Vnames[1,], ")")
+
+    cat("The variable names are represented as follows: \n")
+    print(Vnames)
+  } else
+  {
+    Vnames <- NULL
+  }
 
   ##############################################################################
   ###   Raw data plots
   ##############################################################################
 
-  k <- ncol(Y0)
-
   ggD1 <- data.frame(
     x = seq(0, 1, length=nrow(Y0)),
     Y0
-  ) %>% gather(2:(k+1), key="V", value="y") %>%
-    mutate(V = factor(V, levels=colnames(Y0)))
+  )
+  names(ggD1) <- c("x", names(Y0))
+  ggD1 <- ggD1 %>% gather(2:(k+1), key="V", value="y") %>%
+    mutate(V = factor(V, levels=names(Y0)))
 
   if(k <= 16)
   {
@@ -54,14 +71,27 @@ TREC1 <- function(Y){
   ###   Missing interpolation and standardization
   ##############################################################################
 
-  Y <- miss.inpol(Y0) %>% scale
-  p <- ncol(Y)
+  Y <- miss.inpol(Y) %>% scale
 
   idx.nan <- apply(Y, 2, function(y){all(is.nan(y))}) %>% which
   if(length(idx.nan) > 0){Y <- Y[,-idx.nan]}
 
-  Vnames <<- colnames(Y)
-  names(Vnames) <<- 1:p
+  p <- ncol(Y)
+
+  if(p < k)
+  {
+    idx.rm <- which(!Labs %in% colnames(Y))
+    Vrm <- Vnames[1, idx.rm]
+    Labs <- Labs[-idx.rm]
+
+    if(!is.null(Vnames)){Vnames <- Vnames[,-idx.rm]}
+
+    cat("The following variable(s) is/are removed: \n")
+    print(Vrm)
+  } else
+  {
+    Vrm <- NULL
+  }
 
   ##############################################################################
   ###   Standardization plots
@@ -133,32 +163,6 @@ TREC1 <- function(Y){
     theme(axis.title = element_blank())
 
   ##############################################################################
-  ###   Representative trends selection
-  ##############################################################################
-
-  idx1 <- which(res$dim[,1] == 1)
-
-  if(length(idx1) < 2)
-  {
-    pnum <<- "'pnum' cannot be defined."
-  } else
-  {
-    Coef1 <- res$coef[,2][idx1]
-
-    if(length(unique(sign(Coef1))) == 1)
-    {
-      pnum <<- "'pnum' cannot be defined."
-    } else
-    {
-      pnum <<- c(
-        which.min(Coef1) %>% idx1[.],
-        which.max(Coef1) %>% idx1[.]
-      )
-      names(pnum) <<- Vnames[pnum]
-    }
-  }
-
-  ##############################################################################
   ###   Output
   ##############################################################################
 
@@ -175,7 +179,9 @@ TREC1 <- function(Y){
     fig.StdData = fig.StdData,
     fig.ctrend = fig.ctrend,
     fig.trend = fig.trend,
-    argTREC = argTREC
+    argTREC = argTREC,
+    remove = Vrm,
+    Vnames = Vnames
   )
 
   plot(Out$fig.trend)
