@@ -14,7 +14,7 @@ icon.fit <- function(x){
     out <- 1
   } else
   {
-    q <- apply(BETA, 1, function(b){sum(b*x)})
+    q <- apply(EstForFitIcons, 1, function(b){sum(b*x)})
     out <- (c(1, exp(q)) / (1 + sum(exp(q)))) %>% which.max
   }
 

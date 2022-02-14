@@ -104,7 +104,7 @@ TREC3 <- function(tvar, argTREC){
       geom_line(data=ggDj, aes(x=x, y=y)) +
       facet_wrap(.~V) +
       annotation_raster(
-        img[[res$icon[j]]],
+        ImagesOfIcons[[res$icon[j]]],
         xmin = -Inf, xmax = 0.15, ymax = Inf,
         ymin = yr[2] - (3*(yr[2] - yr[1])/10)
       ) +
