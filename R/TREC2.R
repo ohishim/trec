@@ -9,7 +9,7 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 ylim
 #' @param argTREC the output "argTREC" of TREC1
-#' @param pvar two variable labels for representative trends (option)
+#' @param pvar two variable names for representative trends (option)
 #' @return a dendrogram
 #' @export
 #' @examples

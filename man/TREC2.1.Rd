@@ -7,7 +7,7 @@
 TREC2.1(trn, argTREC, groups = 2)
 }
 \arguments{
-\item{trn}{a list that has thee elements of which each element is a vector of variable labels for increasing/flat/decreasing trends.}
+\item{trn}{a list that has thee elements of which each element is a vector of variable names for increasing/flat/decreasing trends.}
 
 \item{argTREC}{the output "argTREC" of TREC1}
 

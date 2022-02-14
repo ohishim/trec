@@ -14,7 +14,7 @@
 #' @importFrom dplyr mutate
 #' @importFrom png readPNG
 #' @importFrom gridExtra grid.arrange
-#' @param tvar a vector of variable labels for target trends.
+#' @param tvar a vector of variable names for target trends.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
 #' @export

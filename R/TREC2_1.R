@@ -8,7 +8,7 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 ylim
 #' @importFrom gridExtra grid.arrange
-#' @param trn a list that has thee elements of which each element is a vector of variable labels for increasing/flat/decreasing trends.
+#' @param trn a list that has thee elements of which each element is a vector of variable names for increasing/flat/decreasing trends.
 #' @param argTREC the output "argTREC" of TREC1
 #' @param groups The number of groups corresponding to "trn".
 #' @return a figure

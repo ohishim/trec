@@ -7,7 +7,7 @@
 TREC3(tvar, argTREC)
 }
 \arguments{
-\item{tvar}{a vector of variable labels for target trends.}
+\item{tvar}{a vector of variable names for target trends.}
 
 \item{argTREC}{the output "argTREC" of TREC1.}
 }

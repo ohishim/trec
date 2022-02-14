@@ -48,7 +48,7 @@ A classification into two groups can be executed as follows:
 ``` r
 res2 <- TREC2(res1$argTREC)
 ```
-If you want to classify into three groups, you set `groups=3` as an argument of `TREC2`.
+If you want to classify into three groups, you can set `groups=3` as an argument of `TREC2`.
 
 The `TREC2` first outputs a dendrogram for the trend groups obtained by two- or three-categorical discrimination based on the two linear trends of which slopes are 1 and -1 (default).
 You can also select two trends for the discrimination like this:
@@ -69,8 +69,8 @@ Then, you have the following message:
       Here, you can use three objects `trn`, `trn1`, and `trn2` to modify the groups, like this:
 
         ``` r
-        trn[[1]] <- c(trn1, "V2")  # variable numbers for group 1
-        trn[[2]] <- trn2[-1]    # variable numbers for group 2
+        trn[[1]] <- c(trn1, "V2")  # variable names for group 1
+        trn[[2]] <- trn2[-1]       # variable names for group 2
         
         # draw trends for each group
         TREC2.1(trn, res1$argTREC)
@@ -80,8 +80,8 @@ Then, you have the following message:
       you can classify into three groups as follows:  
 
         ``` r
-        trn[[3]] <- trn2[1]   # variable numbers for group 3
-        trn[[2]] <- trn2[-1]  # variable numbers for group 2
+        trn[[3]] <- trn2[1]   # variable names for group 3
+        trn[[2]] <- trn2[-1]  # variable names for group 2
         
         # draw trends for each group
         TREC2.1(trn, res1$argTREC, groups=3)
@@ -92,7 +92,7 @@ Then, you have the following message:
       Then, you select target trends as `tvar` and can proceed the next step.
       
 1. If "no":  
-  trec procedure terminates and you have group numbers as `trn` object.
+  trec procedure terminates and you have variables for each group as`trn` object.
 
 ### the last step
 
@@ -100,15 +100,15 @@ First, you have to select target trends.
 This step is executed as follows:
 
 ``` r
-#target trends
+#variable names for target trends
 tvar <- paste0("V", c(1, 2, 4, 8))
 
 #execute this step
 res3 <- TREC3(tvar, res1$argTREC)
 ```
 
-Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain variable numbers for each group classified based on the target trends.
-These figure and group numbers are respectively reconstructed by `plot(res3$fig.icon)` and `res3$group`.
+Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain variable names for each group classified based on the target trends.
+These figure and group names are respectively reconstructed by `plot(res3$fig.icon)` and `res3$group`.
 Moreover, you can obtain a figure of group-wise trends as
 
 ``` r
