@@ -177,20 +177,14 @@ TREC1 <- function(Y){
   ###   Trend plots
   ##############################################################################
 
-  # fig.trend <- ggplotly(
-  #   ggplot(ggD3) +
-  #     geom_line(aes(x=x, y=t, col=V)) +
-  #     theme(
-  #       axis.title = element_blank(),
-  #       legend.title = element_blank()
-  #     )
-  # )
   fig.trend <- ggplot(ggD3) +
     geom_line(aes(x=x, y=t, col=V)) +
     theme(
       axis.title = element_blank(),
       legend.title = element_blank()
     )
+
+  (fig.trend <- ggplotly(fig.trend))
 
   ##############################################################################
   ###   Output
@@ -214,7 +208,7 @@ TREC1 <- function(Y){
     Vnames = Vnames
   )
 
-  plot(Out$fig.trend)
+  # plot(Out$fig.trend)
 
   return(Out)
 }
