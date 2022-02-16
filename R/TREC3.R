@@ -37,7 +37,8 @@ TREC3 <- function(tvar, argTREC){
   Labs <- colnames(TR)
   p <- ncol(TR)
 
-  tnum <- which(Labs %in% tvar) %>% sort
+  tnum <- which(Labs %in% tvar)
+  tvar <- Labs[tnum]
 
   TGTR <- TR[,tnum]
 
