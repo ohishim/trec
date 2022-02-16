@@ -206,7 +206,7 @@ TREC1 <- function(Y){
     Vnames = Vnames
   )
 
-  ggplotly(fig.trend)
+  print(Out$fig.trend)
 
   return(Out)
 }
