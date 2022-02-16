@@ -184,8 +184,6 @@ TREC1 <- function(Y){
       legend.title = element_blank()
     )
 
-  (fig.trend <- ggplotly(fig.trend))
-
   ##############################################################################
   ###   Output
   ##############################################################################
@@ -202,13 +200,13 @@ TREC1 <- function(Y){
     fig.RawData = fig.RawData,
     fig.StdData = fig.StdData,
     fig.ctrend = fig.ctrend,
-    fig.trend = fig.trend,
+    fig.trend = ggplotly(fig.trend),
     argTREC = argTREC,
     remove = Vrm,
     Vnames = Vnames
   )
 
-  # plot(Out$fig.trend)
+  ggplotly(fig.trend)
 
   return(Out)
 }
