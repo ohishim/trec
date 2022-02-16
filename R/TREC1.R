@@ -61,7 +61,7 @@ TREC1 <- function(Y){
       )
   } else
   {
-    div <- split(paste0("V", 1:k), rep(1:ceiling(k/16), each=16)[1:k])
+    div <- split(Labs, rep(1:ceiling(k/16), each=16)[1:k])
 
     fig.RawData <- lapply(1:length(div), function(j){
       subset(ggD1, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
@@ -121,7 +121,7 @@ TREC1 <- function(Y){
       )
   } else
   {
-    div <- split(colnames(Y), rep(1:ceiling(p/16), each=16)[1:p])
+    div <- split(Labs, rep(1:ceiling(p/16), each=16)[1:p])
 
     fig.StdData <- lapply(1:length(div), function(j){
       subset(ggD2, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
