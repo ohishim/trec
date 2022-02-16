@@ -10,6 +10,7 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
+#' @importFrom plotly ggplotly
 #' @param Y an observation matrix. The row corresponds to time steps and the column corresponds to variables.
 #' @return some figures for observed data and estimated trend, and arguments for next steps.
 #' @export
@@ -54,7 +55,10 @@ TREC1 <- function(Y){
     fig.RawData <- ggplot(ggD1, aes(x=x, y=y)) +
       geom_line() +
       facet_wrap(. ~ V, scales="free") +
-      theme(axis.title = element_blank())
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      )
   } else
   {
     div <- split(paste0("V", 1:k), rep(1:ceiling(k/16), each=16)[1:k])
@@ -63,7 +67,10 @@ TREC1 <- function(Y){
       subset(ggD1, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
         geom_line() +
         facet_wrap(. ~ V, scales="free") +
-        theme(axis.title = element_blank())
+        theme(
+          axis.title = element_blank(),
+          legend.title = element_blank()
+        )
     })
   }
 
@@ -108,7 +115,10 @@ TREC1 <- function(Y){
     fig.StdData <- ggplot(ggD2, aes(x=x, y=y)) +
       geom_line() +
       facet_wrap(. ~ V, scales="free") +
-      theme(axis.title = element_blank())
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      )
   } else
   {
     div <- split(colnames(Y), rep(1:ceiling(p/16), each=16)[1:p])
@@ -117,7 +127,10 @@ TREC1 <- function(Y){
       subset(ggD2, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
         geom_line() +
         facet_wrap(. ~ V, scales="free") +
-        theme(axis.title = element_blank())
+        theme(
+          axis.title = element_blank(),
+          legend.title = element_blank()
+        )
     })
   }
 
@@ -142,7 +155,10 @@ TREC1 <- function(Y){
       geom_line(aes(x=x, y=y)) +
       geom_line(aes(x=x, y=t), col="red")+
       facet_wrap(. ~ V, scales="free") +
-      theme(axis.title = element_blank())
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      )
   } else
   {
     fig.ctrend <- lapply(1:length(div), function(j){
@@ -150,7 +166,10 @@ TREC1 <- function(Y){
         geom_line(aes(x=x, y=y)) +
         geom_line(aes(x=x, y=t), col="red") +
         facet_wrap(. ~ V, scales="free") +
-        theme(axis.title = element_blank())
+        theme(
+          axis.title = element_blank(),
+          legend.title = element_blank()
+        )
     })
   }
 
@@ -158,9 +177,14 @@ TREC1 <- function(Y){
   ###   Trend plots
   ##############################################################################
 
-  fig.trend <- ggplot(ggD3) +
-    geom_line(aes(x=x, y=t, col=V)) +
-    theme(axis.title = element_blank())
+  fig.trend <- ggplotly(
+    ggplot(ggD3) +
+      geom_line(aes(x=x, y=t, col=V)) +
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      )
+  )
 
   ##############################################################################
   ###   Output

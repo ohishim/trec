@@ -15,6 +15,7 @@ Imports:
     ggplot2,
     gridExtra,
     magrittr,
+    plotly,
     png,
     tidyr
 Roxygen: list(markdown = TRUE)

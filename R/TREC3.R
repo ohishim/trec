@@ -62,7 +62,10 @@ TREC3 <- function(tvar, argTREC){
   fig.tgtrend.G <- ggplot(ggD4) +
     geom_line(aes(x=x, y=t, col=V)) +
     facet_wrap(.~L) +
-    theme(axis.title = element_blank())
+    theme(
+      axis.title = element_blank(),
+      legend.title = element_blank()
+    )
 
   #=============================================================================
   ###   the target trend plots
@@ -72,7 +75,10 @@ TREC3 <- function(tvar, argTREC){
     ggplot() +
     geom_line(aes(x=x, y=t)) +
     facet_wrap(.~V) +
-    theme(axis.title = element_blank())
+    theme(
+      axis.title = element_blank(),
+      legend.title = element_blank()
+    )
 
   ##############################################################################
   ###   Assign icon to the target trends
@@ -109,7 +115,10 @@ TREC3 <- function(tvar, argTREC){
         xmin = -Inf, xmax = 0.15, ymax = Inf,
         ymin = yr[2] - (3*(yr[2] - yr[1])/10)
       ) +
-      theme(axis.title = element_blank()) +
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      ) +
       ylim(yr)
   })
 

@@ -24,12 +24,18 @@ TREC2.1 <- function(trn, argTREC, groups=2){
 
   fig.trend1 <- ggD3 %>% subset(V %in% trn[[1]]) %>% ggplot() +
     geom_line(aes(x=x, y=t, col=V)) +
-    theme(axis.title = element_blank()) +
+    theme(
+      axis.title = element_blank(),
+      legend.title = element_blank()
+    ) +
     ylim(ran)
 
   fig.trend2 <- ggD3 %>% subset(V %in% trn[[2]]) %>% ggplot() +
     geom_line(aes(x=x, y=t, col=V)) +
-    theme(axis.title = element_blank()) +
+    theme(
+      axis.title = element_blank(),
+      legend.title = element_blank()
+    ) +
     ylim(ran)
 
   if(groups == 2)
@@ -39,7 +45,10 @@ TREC2.1 <- function(trn, argTREC, groups=2){
   {
     fig.trend3 <- ggD3 %>% subset(V %in% trn[[3]]) %>% ggplot() +
       geom_line(aes(x=x, y=t, col=V)) +
-      theme(axis.title = element_blank()) +
+      theme(
+        axis.title = element_blank(),
+        legend.title = element_blank()
+      ) +
       ylim(ran)
 
     grid.arrange(fig.trend1, fig.trend2, fig.trend3, ncol=3)
