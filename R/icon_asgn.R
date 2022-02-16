@@ -9,9 +9,18 @@
 
 icon.fit <- function(x){
 
-  if((x[1] == 1) & (abs(x[4]) <= 0.1))
+  if(x[2] == 1)
   {
-    out <- 1
+    if(abs(x[5]) <= 0.1)
+    {
+      out <- 1
+    } else if(x[5] > 0)
+    {
+      out <- 4
+    } else
+    {
+      out <- 7
+    }
   } else
   {
     q <- apply(EstForFitIcons, 1, function(b){sum(b*x)})
@@ -28,7 +37,6 @@ icon.fit <- function(x){
 #' @param Z an observation matrix. The row corresponds to time steps and the column corresponds to variables.
 #' @return a data.frame. This has the following items:
 #'     V which is names of variables, icon which is assigned icon, and fitted values of trends.
-#' @export
 #' @examples
 #' #icon.asgn(Z)
 
