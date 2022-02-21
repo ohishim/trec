@@ -26,7 +26,8 @@ TREC2.1 <- function(trn, argTREC, groups=2){
     geom_line(aes(x=x, y=t, col=V)) +
     theme(
       axis.title = element_blank(),
-      legend.title = element_blank()
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank()
     ) +
     ylim(ran)
 
@@ -34,7 +35,8 @@ TREC2.1 <- function(trn, argTREC, groups=2){
     geom_line(aes(x=x, y=t, col=V)) +
     theme(
       axis.title = element_blank(),
-      legend.title = element_blank()
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank()
     ) +
     ylim(ran)
 
@@ -47,7 +49,8 @@ TREC2.1 <- function(trn, argTREC, groups=2){
       geom_line(aes(x=x, y=t, col=V)) +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank()
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
       ) +
       ylim(ran)
 

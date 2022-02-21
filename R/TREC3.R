@@ -25,6 +25,9 @@ TREC3 <- function(tvar, argTREC){
 
   ggD3 <- argTREC$ggD3
 
+  tr.n <- length(tvar)
+  split <- tr.n > 16
+
   ##############################################################################
   ###   Set target trend corresponding to icon
   ##############################################################################
@@ -39,6 +42,28 @@ TREC3 <- function(tvar, argTREC){
 
   tnum <- which(Labs %in% tvar)
   tvar <- Labs[tnum]
+
+  if(split)
+  {
+    div.n <- ceiling(tr.n / 16)
+
+    if(tr.n %% div.n == 0)
+    {
+      div <- split(
+        tvar,
+        rep(1:div.n, each=tr.n / div.n)
+      )
+    } else
+    {
+      div <- split(
+        tvar,
+        c(
+          rep(1:div.n, tr.n %/% div.n),
+          1:(tr.n %% div.n)
+        ) %>% sort
+      )
+    }
+  }
 
   TGTR <- TR[,tnum]
 
@@ -59,26 +84,59 @@ TREC3 <- function(tvar, argTREC){
     L = factor(L, levels=Labs)
   ) %>% left_join(ggD3, ., by="V")
 
-  fig.tgtrend.G <- ggplot(ggD4) +
-    geom_line(aes(x=x, y=t, col=V)) +
-    facet_wrap(.~L) +
-    theme(
-      axis.title = element_blank(),
-      legend.title = element_blank()
-    )
+  if(split)
+  {
+    fig.tgtrend.G <- lapply(1:div.n, function(j){
+      subset(ggD4, L %in% div[[j]]) %>% ggplot() +
+        geom_line(aes(x=x, y=t, col=V)) +
+        facet_wrap(.~L) +
+        theme(
+          axis.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
+        )
+    })
+  } else
+  {
+    fig.tgtrend.G <- ggplot(ggD4) +
+      geom_line(aes(x=x, y=t, col=V)) +
+      facet_wrap(.~L) +
+      theme(
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
+      )
+  }
 
   #=============================================================================
   ###   the target trend plots
   #=============================================================================
 
-  fig.tgtrend <- ggD4 %>% subset(V %in% tvar) %>%
-    ggplot() +
-    geom_line(aes(x=x, y=t)) +
-    facet_wrap(.~V) +
-    theme(
-      axis.title = element_blank(),
-      legend.title = element_blank()
-    )
+  if(split)
+  {
+    fig.tgtrend <- lapply(1:div.n, function(j){
+      subset(ggD4, V %in% div[[j]]) %>% subset(V %in% tvar) %>%
+        ggplot() +
+        geom_line(aes(x=x, y=t)) +
+        facet_wrap(.~V) +
+        theme(
+          axis.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
+        )
+    })
+  } else
+  {
+    fig.tgtrend <- ggD4 %>% subset(V %in% tvar) %>%
+      ggplot() +
+      geom_line(aes(x=x, y=t)) +
+      facet_wrap(.~V) +
+      theme(
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
+      )
+  }
 
   ##############################################################################
   ###   Assign icon to the target trends
@@ -117,26 +175,59 @@ TREC3 <- function(tvar, argTREC){
       ) +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank()
+        legend.title = element_blank(),
+        axis.text.x =  element_blank(),
+        axis.ticks.x = element_blank()
       ) +
       ylim(yr)
   })
 
-  if(tvar.n <= 3)
+  if(split)
   {
-    fig.col <- tvar.n
-  } else if(tvar.n == 4)
-  {
-    fig.col <- 2
+    div1 <- split(
+      1:tr.n,
+      lapply(1:div.n, function(j){rep(j, length(div[[j]]))}) %>% unlist
+    )
+
+    fig.icon <- lapply(1:div.n, function(j){
+
+      idx <- div1[[j]]
+      idx.n <- length(idx)
+
+      if(idx.n <= 3)
+      {
+        fig.col <- idx.n
+      } else if(idx.n == 4)
+      {
+        fig.col <- 2
+      } else
+      {
+        fig.col <- 3
+      }
+
+      fig.icon <- do.call(
+        grid.arrange,
+        c(figs[idx], list(ncol=fig.col))
+      )
+    })
   } else
   {
-    fig.col <- 3
-  }
+    if(tvar.n <= 3)
+    {
+      fig.col <- tvar.n
+    } else if(tvar.n == 4)
+    {
+      fig.col <- 2
+    } else
+    {
+      fig.col <- 3
+    }
 
-  fig.icon <- do.call(
-    grid.arrange,
-    c(figs, list(ncol=fig.col))
-  )
+    fig.icon <- do.call(
+      grid.arrange,
+      c(figs, list(ncol=fig.col))
+    )
+  }
 
   ##############################################################################
   ###   Output

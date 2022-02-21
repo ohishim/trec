@@ -57,11 +57,30 @@ TREC1 <- function(Y){
       facet_wrap(. ~ V, scales="free") +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank()
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
       )
   } else
   {
-    div <- split(Labs, rep(1:ceiling(k/16), each=16)[1:k])
+    div.n <- ceiling(k / 16)
+
+    if(k %% div.n == 0)
+    {
+      div <- split(
+        Labs,
+        rep(1:div.n, each=k / div.n)
+      )
+    } else
+    {
+      div <- split(
+        Labs,
+        c(
+          rep(1:div.n, k %/% div.n),
+          1:(k %% div.n)
+        ) %>% sort
+      )
+    }
 
     fig.RawData <- lapply(1:length(div), function(j){
       subset(ggD1, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
@@ -69,7 +88,9 @@ TREC1 <- function(Y){
         facet_wrap(. ~ V, scales="free") +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank()
+          legend.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
         )
     })
   }
@@ -117,11 +138,30 @@ TREC1 <- function(Y){
       facet_wrap(. ~ V, scales="free") +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank()
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
       )
   } else
   {
-    div <- split(Labs, rep(1:ceiling(p/16), each=16)[1:p])
+    div.n <- ceiling(k / 16)
+
+    if(k %% div.n == 0)
+    {
+      div <- split(
+        Labs,
+        rep(1:div.n, each=k / div.n)
+      )
+    } else
+    {
+      div <- split(
+        Labs,
+        c(
+          rep(1:div.n, k %/% div.n),
+          1:(k %% div.n)
+        ) %>% sort
+      )
+    }
 
     fig.StdData <- lapply(1:length(div), function(j){
       subset(ggD2, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
@@ -129,7 +169,9 @@ TREC1 <- function(Y){
         facet_wrap(. ~ V, scales="free") +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank()
+          legend.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
         )
     })
   }
@@ -157,7 +199,9 @@ TREC1 <- function(Y){
       facet_wrap(. ~ V, scales="free") +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank()
+        legend.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()
       )
   } else
   {
@@ -168,7 +212,9 @@ TREC1 <- function(Y){
         facet_wrap(. ~ V, scales="free") +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank()
+          legend.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
         )
     })
   }
@@ -181,7 +227,8 @@ TREC1 <- function(Y){
     geom_line(aes(x=x, y=t, col=V)) +
     theme(
       axis.title = element_blank(),
-      legend.title = element_blank()
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank()
     )
 
   ##############################################################################
