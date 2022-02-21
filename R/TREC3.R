@@ -237,7 +237,7 @@ TREC3 <- function(tvar, argTREC){
     fig.tgtrend.G = fig.tgtrend.G,
     fig.tgtrend = fig.tgtrend,
     fig.icon = fig.icon,
-    group = split(Labs, L)
+    group = split(Labs, factor(L, levels=tvar))
   )
 
   cat("variables for each group: \n")
