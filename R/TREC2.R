@@ -10,6 +10,7 @@
 #' @importFrom ggplot2 ylim
 #' @param argTREC the output "argTREC" of TREC1
 #' @param pvar two variable names for representative trends (option)
+#' @param groups the number of groups for classification
 #' @return a dendrogram
 #' @export
 #' @examples

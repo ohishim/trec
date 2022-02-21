@@ -10,6 +10,8 @@ TREC2(argTREC, pvar = NULL, groups = 2)
 \item{argTREC}{the output "argTREC" of TREC1}
 
 \item{pvar}{two variable names for representative trends (option)}
+
+\item{groups}{the number of groups for classification}
 }
 \value{
 a dendrogram
