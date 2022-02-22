@@ -14,6 +14,15 @@
 #' @importFrom dplyr mutate
 #' @importFrom png readPNG
 #' @importFrom gridExtra grid.arrange
+#' @importFrom gt gt
+#' @importFrom gt text_transform
+#' @importFrom gt cells_body
+#' @importFrom gt local_image
+#' @importFrom gt px
+#' @importFrom gt ggplot_image
+#' @importFrom gt tab_style
+#' @importFrom gt cell_text
+#' @importFrom gt cells_column_labels
 #' @param tvar a vector of variable names for target trends.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
@@ -162,72 +171,124 @@ TREC3 <- function(tvar, argTREC){
 
   tvar.n <- length(tvar)
 
-  figs <- lapply(1:tvar.n, function(j){
+  ttrends <- lapply(1:tvar.n, function(j){
     ggDj <- subset(ggD, V==tvar[j])
 
     figj <- ggplot() +
-      geom_line(data=ggDj, aes(x=x, y=y)) +
-      facet_wrap(.~V) +
-      annotation_raster(
-        ImagesOfIcons[[res$icon[j]]],
-        xmin = -Inf, xmax = 0.15, ymax = Inf,
-        ymin = yr[2] - (3*(yr[2] - yr[1])/10)
-      ) +
+      geom_line(data=ggDj, aes(x=x, y=y), size=2) +
       theme(
         axis.title = element_blank(),
         legend.title = element_blank(),
-        axis.text.x =  element_blank(),
-        axis.ticks.x = element_blank()
+        axis.text =  element_blank(),
+        axis.ticks = element_blank()
       ) +
       ylim(yr)
   })
 
-  if(split)
-  {
-    div1 <- split(
-      1:tr.n,
-      lapply(1:div.n, function(j){rep(j, length(div[[j]]))}) %>% unlist
-    )
+  paths <- paste0("icon", res$icon, ".png") %>%
+    sapply(function(x){system.file(x, package="trec")})
 
-    fig.icon <- lapply(1:div.n, function(j){
-
-      idx <- div1[[j]]
-      idx.n <- length(idx)
-
-      if(idx.n <= 3)
-      {
-        fig.col <- idx.n
-      } else if(idx.n == 4)
-      {
-        fig.col <- 2
-      } else
-      {
-        fig.col <- 3
+  fig.icon <- data.frame(
+    tvar = tvar,
+    trend = 1:tvar.n,
+    icon = 1:tvar.n
+  ) %>% gt %>%
+    text_transform(
+      locations = cells_body(
+        columns = icon
+      ),
+      fn = function(x) {
+        local_image(
+          filename = paths,
+          height = px(50)
+        )
       }
-
-      fig.icon <- do.call(
-        grid.arrange,
-        c(figs[idx], list(ncol=fig.col))
-      )
-    })
-  } else
-  {
-    if(tvar.n <= 3)
-    {
-      fig.col <- tvar.n
-    } else if(tvar.n == 4)
-    {
-      fig.col <- 2
-    } else
-    {
-      fig.col <- 3
-    }
-
-    fig.icon <- do.call(
-      grid.arrange,
-      c(figs, list(ncol=fig.col))
+    ) %>%
+    text_transform(
+      locations = cells_body(
+        columns = trend
+      ),
+      fn = function(x) {
+        ggplot_image(ttrends, height = px(80))
+      }
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_body()
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_column_labels()
     )
-  }
+
+  print(fig.icon)
+
+  # figs <- lapply(1:tvar.n, function(j){
+  #   ggDj <- subset(ggD, V==tvar[j])
+  #
+  #   figj <- ggplot() +
+  #     geom_line(data=ggDj, aes(x=x, y=y)) +
+  #     facet_wrap(.~V) +
+  #     annotation_raster(
+  #       ImagesOfIcons[[res$icon[j]]],
+  #       xmin = -Inf, xmax = 0.15, ymax = Inf,
+  #       ymin = yr[2] - (3*(yr[2] - yr[1])/10)
+  #     ) +
+  #     theme(
+  #       axis.title = element_blank(),
+  #       legend.title = element_blank(),
+  #       axis.text.x =  element_blank(),
+  #       axis.ticks.x = element_blank()
+  #     ) +
+  #     ylim(yr)
+  # })
+  #
+  # if(split)
+  # {
+  #   div1 <- split(
+  #     1:tr.n,
+  #     lapply(1:div.n, function(j){rep(j, length(div[[j]]))}) %>% unlist
+  #   )
+  #
+  #   fig.icon <- lapply(1:div.n, function(j){
+  #
+  #     idx <- div1[[j]]
+  #     idx.n <- length(idx)
+  #
+  #     if(idx.n <= 3)
+  #     {
+  #       fig.col <- idx.n
+  #     } else if(idx.n == 4)
+  #     {
+  #       fig.col <- 2
+  #     } else
+  #     {
+  #       fig.col <- 3
+  #     }
+  #
+  #     fig.icon <- do.call(
+  #       grid.arrange,
+  #       c(figs[idx], list(ncol=fig.col))
+  #     )
+  #   })
+  # } else
+  # {
+  #   if(tvar.n <= 3)
+  #   {
+  #     fig.col <- tvar.n
+  #   } else if(tvar.n == 4)
+  #   {
+  #     fig.col <- 2
+  #   } else
+  #   {
+  #     fig.col <- 3
+  #   }
+  #
+  #   fig.icon <- do.call(
+  #     grid.arrange,
+  #     c(figs, list(ncol=fig.col))
+  #   )
+  # }
 
   ##############################################################################
   ###   Output

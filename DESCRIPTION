@@ -14,6 +14,7 @@ Imports:
     dplyr,
     ggplot2,
     gridExtra,
+    gt,
     magrittr,
     plotly,
     png,
