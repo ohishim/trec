@@ -9,6 +9,10 @@
 #' @importFrom ggplot2 ylim
 #' @importFrom plotly ggplotly
 #' @importFrom gridExtra grid.arrange
+#' @importFrom dplyr right_join
+#' @importFrom dplyr select
+#' @importFrom dplyr everything
+#' @importFrom dplyr mutate
 #' @param trn a list that has thee elements of which each element is a vector of variable names for increasing/flat/decreasing trends.
 #' @param argTREC the output "argTREC" of TREC1
 #' @param groups The number of groups corresponding to "trn".
@@ -20,14 +24,22 @@
 TREC2.1 <- function(trn, argTREC, groups=2){
 
   ggD3 <- argTREC$ggD3
+  Labs <- colnames(argTREC$TR)
 
   ran <- range(ggD3$t)
 
+  TRN <- lapply(1:groups, function(j){
+    cbind(trn = paste0("trn", j), V = trn[[j]])
+  }) %>% do.call(rbind, .) %>% data.frame %>%
+    mutate(V = factor(V, levels=Labs))
+
+  Labs1 <- paste(TRN$trn, TRN$V, sep="-")
+
   fig <- plotly::ggplotly(
-    lapply(1:groups, function(j){
-      cbind(trn = paste0("trn", j), V = trn[[j]])
-    }) %>% do.call(rbind, .) %>% data.frame %>%
-      dplyr::right_join(ggD3, by="V") %>%
+    mutate(TRN, V1 = Labs1) %>%
+      right_join(ggD3, by="V") %>%
+      select(V0=V, V=V1, everything()) %>%
+      mutate(V = factor(V, levels=Labs1)) %>%
       ggplot() +
       geom_line(aes(x=x, y=t, col=V)) +
       theme(

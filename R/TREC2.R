@@ -9,6 +9,10 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 ylim
 #' @importFrom plotly ggplotly
+#' @importFrom dplyr right_join
+#' @importFrom dplyr select
+#' @importFrom dplyr everything
+#' @importFrom dplyr mutate
 #' @param argTREC the output "argTREC" of TREC1
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
@@ -70,12 +74,18 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
     ran <- range(ggD3$t)
 
+    TRN <- lapply(1:groups, function(j){
+      cbind(trn = paste0("trn", j), V = trn[[j]])
+    }) %>% do.call(rbind, .) %>% data.frame %>%
+      mutate(V = factor(V, levels=Labs))
+
+    Labs1 <- paste(TRN$trn, TRN$V, sep="-")
+
     fig.trends <- plotly::ggplotly(
-      lapply(1:groups, function(j){
-        cbind(trn = paste0("trn", j), V = trn[[j]])
-      }) %>% do.call(rbind, .) %>% data.frame %>%
-        mutate(V = factor(V, levels=Labs)) %>%
-        dplyr::right_join(ggD3, by="V") %>%
+      mutate(TRN, V1 = Labs1) %>%
+        right_join(ggD3, by="V") %>%
+        select(V0=V, V=V1, everything()) %>%
+        mutate(V = factor(V, levels=Labs1)) %>%
         ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
         theme(
