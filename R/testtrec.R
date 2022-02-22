@@ -9,13 +9,13 @@
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 annotation_raster
 #' @importFrom ggplot2 ylim
-#' @importFrom tidyr gather
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom png readPNG
-#' @importFrom gridExtra grid.arrange
-#' @param tvar a vector of variable names for target trends.
-#' @param argTREC the output "argTREC" of TREC1.
+#' @importFrom gt gt
+#' @importFrom gt text_transform
+#' @importFrom gt cells_body
+#' @importFrom gt local_image
+#' @importFrom gt ggplot_image
+#' @importFrom gt px
+#' @param v a number
 #' @return some figures for trends and assigned icons
 #' @export
 #' @examples
