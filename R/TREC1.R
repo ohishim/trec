@@ -135,7 +135,7 @@ TREC1 <- function(Y){
   {
     fig.StdData <- ggplot(ggD2, aes(x=x, y=y)) +
       geom_line() +
-      facet_wrap(. ~ V, scales="free") +
+      facet_wrap(. ~ V) +
       theme(
         axis.title = element_blank(),
         legend.title = element_blank(),
@@ -166,7 +166,7 @@ TREC1 <- function(Y){
     fig.StdData <- lapply(1:length(div), function(j){
       subset(ggD2, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
         geom_line() +
-        facet_wrap(. ~ V, scales="free") +
+        facet_wrap(. ~ V) +
         theme(
           axis.title = element_blank(),
           legend.title = element_blank(),
@@ -196,7 +196,7 @@ TREC1 <- function(Y){
     fig.ctrend <- ggplot(ggD3) +
       geom_line(aes(x=x, y=y)) +
       geom_line(aes(x=x, y=t), col="red")+
-      facet_wrap(. ~ V, scales="free") +
+      facet_wrap(. ~ V) +
       theme(
         axis.title = element_blank(),
         legend.title = element_blank(),
@@ -209,7 +209,7 @@ TREC1 <- function(Y){
       subset(ggD3, V %in% div[[j]]) %>% ggplot() +
         geom_line(aes(x=x, y=y)) +
         geom_line(aes(x=x, y=t), col="red") +
-        facet_wrap(. ~ V, scales="free") +
+        facet_wrap(. ~ V) +
         theme(
           axis.title = element_blank(),
           legend.title = element_blank(),

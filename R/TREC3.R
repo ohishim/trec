@@ -23,6 +23,7 @@
 #' @importFrom gt tab_style
 #' @importFrom gt cell_text
 #' @importFrom gt cells_column_labels
+#' @importFrom gt tab_stubhead
 #' @param tvar a vector of variable names for target trends.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
@@ -188,11 +189,14 @@ TREC3 <- function(tvar, argTREC){
   paths <- paste0("icon", res$icon, ".png") %>%
     sapply(function(x){system.file(x, package="trec")})
 
+  group <- split(Labs, factor(L, levels=tvar))
+
   fig.icon <- data.frame(
     tvar = tvar,
+    group = sapply(group, function(x){paste(x, collapse=", ")}),
     trend = 1:tvar.n,
     icon = 1:tvar.n
-  ) %>% gt %>%
+  ) %>% gt(rowname_col = "tvar") %>%
     text_transform(
       locations = cells_body(
         columns = icon
@@ -214,12 +218,13 @@ TREC3 <- function(tvar, argTREC){
     ) %>%
     tab_style(
       style = cell_text(align = "center"),
-      locations = cells_body()
+      locations = cells_body(columns = c("trend", "icon"))
     ) %>%
     tab_style(
       style = cell_text(align = "center"),
       locations = cells_column_labels()
-    )
+    ) %>%
+    tab_stubhead("tvar")
 
   print(fig.icon)
 
@@ -298,7 +303,7 @@ TREC3 <- function(tvar, argTREC){
     fig.tgtrend.G = fig.tgtrend.G,
     fig.tgtrend = fig.tgtrend,
     fig.icon = fig.icon,
-    group = split(Labs, factor(L, levels=tvar))
+    group = group
   )
 
   cat("variables for each group: \n")

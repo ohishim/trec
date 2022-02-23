@@ -88,7 +88,7 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
     fig.trends <- subplot(
       lapply(1:groups, function(j){
-        subset(TRN1, trn==paste0("trn", j)) %>%
+        fig <- subset(TRN1, trn==paste0("trn", j)) %>%
           ggplot() +
           geom_line(aes(x=x, y=t, col=V)) +
           theme(
@@ -98,6 +98,16 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
           ) +
           ylim(ran) +
           facet_wrap(~trn)
+
+        if(j != 1)
+        {
+          fig <- fig + theme(
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank()
+          )
+        }
+
+        return(fig)
       })
     )
 
