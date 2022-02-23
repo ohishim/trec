@@ -8,7 +8,7 @@
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 ylim
-#' @importFrom plotly ggplotly
+#' @importFrom plotly subplot
 #' @importFrom dplyr right_join
 #' @importFrom dplyr select
 #' @importFrom dplyr everything
@@ -81,21 +81,41 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
     Labs1 <- paste(TRN$trn, TRN$V, sep="-")
 
-    fig.trends <- plotly::ggplotly(
-      mutate(TRN, V1 = Labs1) %>%
-        right_join(ggD3, by="V") %>%
-        select(V0=V, V=V1, everything()) %>%
-        mutate(V = factor(V, levels=Labs1)) %>%
-        ggplot() +
-        geom_line(aes(x=x, y=t, col=V)) +
-        theme(
-          axis.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
-        ) +
-        ylim(ran) +
-        facet_wrap(~trn)
+    TRN1 <- mutate(TRN, V1 = Labs1) %>%
+      right_join(ggD3, by="V") %>%
+      select(V0=V, V=V1, everything()) %>%
+      mutate(V = factor(V, levels=Labs1))
+
+    fig.trends <- subplot(
+      lapply(1:groups, function(j){
+        subset(TRN1, trn==paste0("trn", j)) %>%
+          ggplot() +
+          geom_line(aes(x=x, y=t, col=V)) +
+          theme(
+            axis.title = element_blank(),
+            axis.text.x = element_blank(),
+            axis.ticks.x = element_blank()
+          ) +
+          ylim(ran) +
+          facet_wrap(~trn)
+      })
     )
+
+    # fig.trends <- plotly::ggplotly(
+    #   mutate(TRN, V1 = Labs1) %>%
+    #     right_join(ggD3, by="V") %>%
+    #     select(V0=V, V=V1, everything()) %>%
+    #     mutate(V = factor(V, levels=Labs1)) %>%
+    #     ggplot() +
+    #     geom_line(aes(x=x, y=t, col=V)) +
+    #     theme(
+    #       axis.title = element_blank(),
+    #       axis.text.x = element_blank(),
+    #       axis.ticks.x = element_blank()
+    #     ) +
+    #     ylim(ran) +
+    #     facet_wrap(~trn)
+    # )
 
     print(fig.trends)
 

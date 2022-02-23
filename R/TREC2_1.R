@@ -7,12 +7,13 @@
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 ylim
-#' @importFrom plotly ggplotly
+#' @importFrom plotly subplot
 #' @importFrom gridExtra grid.arrange
 #' @importFrom dplyr right_join
 #' @importFrom dplyr select
 #' @importFrom dplyr everything
 #' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
 #' @param trn a list that has thee elements of which each element is a vector of variable names for increasing/flat/decreasing trends.
 #' @param argTREC the output "argTREC" of TREC1
 #' @param groups The number of groups corresponding to "trn".
@@ -31,24 +32,29 @@ TREC2.1 <- function(trn, argTREC, groups=2){
   TRN <- lapply(1:groups, function(j){
     cbind(trn = paste0("trn", j), V = trn[[j]])
   }) %>% do.call(rbind, .) %>% data.frame %>%
-    mutate(V = factor(V, levels=Labs))
+    mutate(V = factor(V, levels=Labs)) %>%
+    arrange(trn, V)
 
   Labs1 <- paste(TRN$trn, TRN$V, sep="-")
 
-  fig <- plotly::ggplotly(
-    mutate(TRN, V1 = Labs1) %>%
-      right_join(ggD3, by="V") %>%
-      select(V0=V, V=V1, everything()) %>%
-      mutate(V = factor(V, levels=Labs1)) %>%
-      ggplot() +
-      geom_line(aes(x=x, y=t, col=V)) +
-      theme(
-        axis.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
-      ) +
-      ylim(ran) +
-      facet_wrap(~trn)
+  TRN1 <- mutate(TRN, V1 = Labs1) %>%
+    right_join(ggD3, by="V") %>%
+    select(V0=V, V=V1, everything()) %>%
+    mutate(V = factor(V, levels=Labs1))
+
+  fig <- subplot(
+    lapply(1:groups, function(j){
+      subset(TRN1, trn==paste0("trn", j)) %>%
+        ggplot() +
+        geom_line(aes(x=x, y=t, col=V)) +
+        theme(
+          axis.title = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()
+        ) +
+        ylim(ran) +
+        facet_wrap(~trn)
+    })
   )
 
   print(fig)
