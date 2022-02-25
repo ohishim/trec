@@ -43,7 +43,7 @@ TREC1 <- function(Y){
   ##############################################################################
 
   ggD1 <- data.frame(
-    x = seq(0, 1, length=nrow(Y0)),
+    x = 1:nrow(Y0), #seq(0, 1, length=nrow(Y0)),
     Y0
   )
   names(ggD1) <- c("x", names(Y0))
@@ -54,12 +54,10 @@ TREC1 <- function(Y){
   {
     fig.RawData <- ggplot(ggD1, aes(x=x, y=y)) +
       geom_line() +
-      facet_wrap(. ~ V, scales="free") +
+      facet_wrap(. ~ V, scales="free_y") +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+        legend.title = element_blank()
       )
   } else
   {
@@ -85,12 +83,10 @@ TREC1 <- function(Y){
     fig.RawData <- lapply(1:length(div), function(j){
       subset(ggD1, V %in% div[[j]]) %>% ggplot(aes(x=x, y=y)) +
         geom_line() +
-        facet_wrap(. ~ V, scales="free") +
+        facet_wrap(. ~ V, scales="free_y") +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          legend.title = element_blank()
         )
     })
   }
@@ -126,7 +122,7 @@ TREC1 <- function(Y){
   ##############################################################################
 
   ggD2 <- data.frame(
-    x = seq(0, 1, length=nrow(Y)),
+    x = 1:nrow(Y), #seq(0, 1, length=nrow(Y)),
     Y
   ) %>% gather(2:(p+1), key="V", value="y") %>%
     mutate(V = factor(V, levels=colnames(Y)))
@@ -138,9 +134,7 @@ TREC1 <- function(Y){
       facet_wrap(. ~ V) +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+        legend.title = element_blank()
       )
   } else
   {
@@ -169,9 +163,7 @@ TREC1 <- function(Y){
         facet_wrap(. ~ V) +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          legend.title = element_blank()
         )
     })
   }
@@ -199,9 +191,7 @@ TREC1 <- function(Y){
       facet_wrap(. ~ V) +
       theme(
         axis.title = element_blank(),
-        legend.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+        legend.title = element_blank()
       )
   } else
   {
@@ -212,9 +202,7 @@ TREC1 <- function(Y){
         facet_wrap(. ~ V) +
         theme(
           axis.title = element_blank(),
-          legend.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          legend.title = element_blank()
         )
     })
   }
@@ -226,9 +214,7 @@ TREC1 <- function(Y){
   fig.trend <- ggplot(ggD3) +
     geom_line(aes(x=x, y=t, col=V)) +
     theme(
-      axis.title = element_blank(),
-      axis.text.x = element_blank(),
-      axis.ticks.x = element_blank()
+      axis.title = element_blank()
     )
 
   ##############################################################################

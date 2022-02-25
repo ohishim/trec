@@ -48,9 +48,7 @@ TREC2.1 <- function(trn, argTREC, groups=2){
         ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
         theme(
-          axis.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          axis.title = element_blank()
         ) +
         ylim(ran) +
         facet_wrap(~trn)

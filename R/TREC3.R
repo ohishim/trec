@@ -101,9 +101,7 @@ TREC3 <- function(tvar, argTREC){
         geom_line(aes(x=x, y=t, col=V)) +
         facet_wrap(.~L) +
         theme(
-          axis.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          axis.title = element_blank()
         )
     })
   } else
@@ -112,9 +110,7 @@ TREC3 <- function(tvar, argTREC){
       geom_line(aes(x=x, y=t, col=V)) +
       facet_wrap(.~L) +
       theme(
-        axis.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+        axis.title = element_blank()
       )
   }
 
@@ -130,9 +126,7 @@ TREC3 <- function(tvar, argTREC){
         geom_line(aes(x=x, y=t)) +
         facet_wrap(.~V) +
         theme(
-          axis.title = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()
+          axis.title = element_blank()
         )
     })
   } else
@@ -142,9 +136,7 @@ TREC3 <- function(tvar, argTREC){
       geom_line(aes(x=x, y=t)) +
       facet_wrap(.~V) +
       theme(
-        axis.title = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank()
+        axis.title = element_blank()
       )
   }
 
