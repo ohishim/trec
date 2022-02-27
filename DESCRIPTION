@@ -18,6 +18,7 @@ Imports:
     magrittr,
     plotly,
     png,
+    rlist,
     tidyr
 Roxygen: list(markdown = TRUE)
 Depends: 
