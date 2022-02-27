@@ -13,6 +13,8 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr everything
 #' @importFrom dplyr mutate
+#' @importFrom dplyr case_when
+#' @importFrom rlist list.findi
 #' @param argTREC the output "argTREC" of TREC1
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
@@ -29,9 +31,9 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
   if(is.null(pvar))
   {
-    x <- seq(0, 1, length=nrow(TR))
-    t1 <- x - 0.5
-    t2 <- - x + 0.5
+    a <- abs(TR) %>% max
+    t1 <- seq(-a, a, length=nrow(TR))
+    t2 <- rev(t1)
   } else
   {
     t1 <- TR[, which(Labs == pvar[1])]
@@ -47,7 +49,21 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
   Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
 
-  trn <<- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
+  DUtr <- c(which.max(dd), which.min(dd)) %>% Labs[.]
+  trn0 <- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
+
+  trn <<- lapply(1:groups, function(j){
+    if(j < 3)
+    {
+      idx <- list.findi(trn0, DUtr[j] %in% .)
+    } else
+    {
+      idx <- list.findi(trn0, !any(DUtr %in% .))
+    }
+
+    return(trn0[[idx]])
+  })
+  names(trn) <<- c("Downward", "Upward", "Flat")[1:groups]
 
   plot(Dend)
 
@@ -63,7 +79,7 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
   if(ans == "yes")
   {
-    names(trn) <- paste0("trn", 1:groups)
+    # names(trn) <- paste0("trn", 1:groups)
 
     cat(
       "The variables are divided the following two/three groups: \n"
@@ -75,7 +91,7 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
     ran <- range(ggD3$t)
 
     TRN <- lapply(1:groups, function(j){
-      cbind(trn = paste0("trn", j), V = trn[[j]])
+      cbind(trn = j, V = trn[[j]])
     }) %>% do.call(rbind, .) %>% data.frame %>%
       mutate(V = factor(V, levels=Labs))
 
@@ -84,18 +100,25 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
     TRN1 <- mutate(TRN, V1 = Labs1) %>%
       right_join(ggD3, by="V") %>%
       select(V0=V, V=V1, everything()) %>%
-      mutate(V = factor(V, levels=Labs1))
+      mutate(
+        V = factor(V, levels=Labs1),
+        group = case_when(
+          trn == 1 ~ "1.Downward",
+          trn == 2 ~ "2.Upward",
+          trn == 3 ~ "3.Flat"
+        )
+      )
 
     fig.trends <- subplot(
       lapply(1:groups, function(j){
-        fig <- subset(TRN1, trn==paste0("trn", j)) %>%
+        fig <- subset(TRN1, trn==j) %>%
           ggplot() +
           geom_line(aes(x=x, y=t, col=V)) +
           theme(
             axis.title = element_blank()
           ) +
           ylim(ran) +
-          facet_wrap(~trn)
+          facet_wrap(~group)
 
         if(j != 1)
         {
@@ -108,22 +131,6 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
         return(fig)
       })
     )
-
-    # fig.trends <- plotly::ggplotly(
-    #   mutate(TRN, V1 = Labs1) %>%
-    #     right_join(ggD3, by="V") %>%
-    #     select(V0=V, V=V1, everything()) %>%
-    #     mutate(V = factor(V, levels=Labs1)) %>%
-    #     ggplot() +
-    #     geom_line(aes(x=x, y=t, col=V)) +
-    #     theme(
-    #       axis.title = element_blank(),
-    #       axis.text.x = element_blank(),
-    #       axis.ticks.x = element_blank()
-    #     ) +
-    #     ylim(ran) +
-    #     facet_wrap(~trn)
-    # )
 
     print(fig.trends)
 

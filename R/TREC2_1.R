@@ -14,6 +14,7 @@
 #' @importFrom dplyr everything
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
+#' @importFrom dplyr case_when
 #' @param trn a list that has thee elements of which each element is a vector of variable names for increasing/flat/decreasing trends.
 #' @param argTREC the output "argTREC" of TREC1
 #' @param groups The number of groups corresponding to "trn".
@@ -30,7 +31,7 @@ TREC2.1 <- function(trn, argTREC, groups=2){
   ran <- range(ggD3$t)
 
   TRN <- lapply(1:groups, function(j){
-    cbind(trn = paste0("trn", j), V = trn[[j]])
+    cbind(trn = j, V = trn[[j]])
   }) %>% do.call(rbind, .) %>% data.frame %>%
     mutate(V = factor(V, levels=Labs)) %>%
     arrange(trn, V)
@@ -40,18 +41,25 @@ TREC2.1 <- function(trn, argTREC, groups=2){
   TRN1 <- mutate(TRN, V1 = Labs1) %>%
     right_join(ggD3, by="V") %>%
     select(V0=V, V=V1, everything()) %>%
-    mutate(V = factor(V, levels=Labs1))
+    mutate(
+      V = factor(V, levels=Labs1),
+      group = case_when(
+        trn == 1 ~ "1.Downward",
+        trn == 2 ~ "2.Upward",
+        trn == 3 ~ "3.Flat"
+      )
+    )
 
   fig <- subplot(
     lapply(1:groups, function(j){
-      fig <- subset(TRN1, trn==paste0("trn", j)) %>%
+      fig <- subset(TRN1, trn==j) %>%
         ggplot() +
         geom_line(aes(x=x, y=t, col=V)) +
         theme(
           axis.title = element_blank()
         ) +
         ylim(ran) +
-        facet_wrap(~trn)
+        facet_wrap(~group)
 
       if(j != 1)
       {
