@@ -36,9 +36,9 @@ If there are removed variables for estimation, they are also displayed.
 You can obtain the represented and the removed variables by `res1$Vnames` and `res1$remove`, respectively.
 
 Moreover, you have a figure of all trends.
-This figure can be reconstructed by `plot(res1$fig.trend)`.
-The trend fits are visible by `plot(res1$fig.ctrend)` where each variable is standardized.
-If the number of variables is larger than 16, you should enter `plot(res1$fig.ctrend[[1]])`, `plot(res1$fig.ctrend[[2]])`, ... to output the figures.
+This figure can be reconstructed by `res1$fig.trend`.
+The trend fits with prediction band are visible by `res1$fig.ctrend` where each variable is standardized.
+If the number of variables is larger than 16, you should enter `res1$fig.ctrend[[1]]`, `res1$fig.ctrend[[2]]`, ... to output the figures.
 
 ### the second step
 
@@ -49,68 +49,38 @@ A classification into two groups can be executed as follows:
 res2 <- TREC2(res1$argTREC)
 ```
 If you want to classify into three groups, you can set `groups=3` as an argument of `TREC2`.
-
-The `TREC2` first outputs a dendrogram for the trend groups obtained by two- or three-categorical discrimination based on the two linear trends of which slopes are 1 and -1 (default).
-You can also select two trends for the discrimination like this:
+The above code classifies by using dendrogram (this is default).
+The `TREC2` has the other option that is classification without dendrogram, which is performed by setting of `method="D"`.
+Moreover, in default, the classification is performed based on the two fixed (but data-dependent) linear trends.
+You can also select two trends like this:
 ``` r
 res2 <- TREC2(res1$argTREC, pvar=c("V2", "V7"))
 ```
-This dendrobram can be reconstructed by `plot(res2$dend)`.
-Then, you have the following message:  
 
-`Do you want to more concrete classification? Please enter yes or no: `.  
-
-
-1. If "yes":  
-  you have a figure of trends for each group and have another message: 
-  `Do you need some modifications? Please enter yes or no: `.  
-    1. If "yes" (in the case of classification into two groups):   
-      you can redefine groups and execute `TREC2.1`.
-      Here, you can use three objects `trn`, `trn1`, and `trn2` to modify the groups, like this:
-
-        ``` r
-        trn[[1]] <- c(trn1, "V2")  # variable names for group 1
-        trn[[2]] <- trn2[-1]       # variable names for group 2
-        
-        # draw trends for each group
-        TREC2.1(trn, res1$argTREC)
-        ```
-        Then, you can proceed the next step.
-    1. If "yes" (in the case of classification into three groups):  
-      you can classify into three groups as follows:  
-
-        ``` r
-        trn[[3]] <- trn2[1]   # variable names for group 3
-        trn[[2]] <- trn2[-1]  # variable names for group 2
-        
-        # draw trends for each group
-        TREC2.1(trn, res1$argTREC, groups=3)
-        ```
-        Then, you can proceed the next step.
-    1. If "no":   
-      the figure of trends for each group can be reconstructed by `plot(res2$fig.trends)`.
-      Then, you select target trends as `tvar` and can proceed the next step.
-      
-1. If "no":  
-  trec procedure terminates and you have variables for each group as`trn` object.
+The `TREC2` outputs a figure of group-wise trends obtained by the discrimination.
+This figure can be reconstructed by `res2$fig.trends`.
+Entering `res2$dend()` outputs a dendorogram.
+You can also obtain variable names for each group by `res2$trn`.
+The `res2$trn` is used in the next step.
 
 ### the last step
 
-First, you have to select target trends.
-This step is executed as follows:
+To more concrete classification, this step is performed.
+First, you have to select target trends for each group like this:
+```r 
+tvar <- list(
+  paste0("V", c(1, 3, 9)),  # selected from res2$trn[[1]]
+  paste0("V", c(2, 5))      # selected from res2$trn[[2]]
+)
+```
+where each element of `tvar` must be selected from the corresponding element of `res2$trn`.
+If `res2$trn` has three elements, `tvar` must have three elements.
+Then, this step is executed as follows:
 
 ``` r
-#variable names for target trends
-tvar <- paste0("V", c(1, 2, 4, 8))
-
-#execute this step
-res3 <- TREC3(tvar, res1$argTREC)
+res3 <- TREC3(tvar, res2$trn, res1$argTREC)
 ```
 
-Then, you can obtain a figure which shows the target trends and their assigned icons, and obtain variable names for each group classified based on the target trends.
-These figure and group names are respectively reconstructed by `plot(res3$fig.icon)` and `res3$group`.
-Moreover, you can obtain a figure of group-wise trends as
-
-``` r
-plot(res3$fig.tgtrend.G)
-```
+Then, you can obtain the target trends, more concrete groups, and assigned icons as a table.
+This table can be reconstructed by `res3$fig.icon`.
+Moreover, you can obtain trends of more concrete groups for each rough group by `res3$fig.down`, `res3$fig.up`, and `res3$fig.flat`, respectively.

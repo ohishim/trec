@@ -4,10 +4,12 @@
 \alias{TREC3}
 \title{The third step of TREC}
 \usage{
-TREC3(tvar, argTREC)
+TREC3(tvar, trn, argTREC)
 }
 \arguments{
 \item{tvar}{a vector of variable names for target trends.}
+
+\item{trn}{the output "trn" of TREC2.}
 
 \item{argTREC}{the output "argTREC" of TREC1.}
 }
@@ -18,5 +20,5 @@ some figures for trends and assigned icons
 \code{TREC3} This function performs clustering for trends.
 }
 \examples{
-#TREC3(tnum, argTREC)
+#TREC3(tvar, trn, argTREC)
 }

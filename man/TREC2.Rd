@@ -4,10 +4,12 @@
 \alias{TREC2}
 \title{The second step of TREC}
 \usage{
-TREC2(argTREC, pvar = NULL, groups = 2)
+TREC2(argTREC, method = c("dend", "D"), pvar = NULL, groups = 2)
 }
 \arguments{
 \item{argTREC}{the output "argTREC" of TREC1}
+
+\item{method}{clustering method}
 
 \item{pvar}{two variable names for representative trends (option)}
 

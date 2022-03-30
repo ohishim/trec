@@ -3,65 +3,50 @@
 #'
 #' @importFrom magrittr %>%
 #' @param x a vector of explanatory variables.
+#' @param group Downward or Upward or Flat.
 #' @return a fitted value.
 #' @examples
 #' #icon.fit(x)
 
-icon.fit <- function(x){
+icon.fit <- function(x, group){
 
-  if(x[2] == 1)
+  out <- NULL
+
+  if(group == "Downward")
   {
-    if(abs(x[5]) <= 0.1)
-    {
-      out <- 1
-    } else if(x[5] > 0)
-    {
-      out <- 4
-    } else
+    icons <- c(2, 7, 8, 10)
+
+    if((x[2] == 1) & (x[5] < 0))
     {
       out <- 7
     }
-  } else
-  {
-    q <- apply(EstForFitIcons, 1, function(b){sum(b*x)})
-    out <- (c(1, exp(q)) / (1 + sum(exp(q)))) %>% which.max
   }
 
-  return(out)
-}
+  if(group == "Upward")
+  {
+    icons <- c(3, 4, 5, 10)
 
-#' @title Assign icons
-#' @description \code{icon.asgn} This function assigns icons to cubic trends.
-#'
-#' @importFrom magrittr %>%
-#' @param Z an observation matrix. The row corresponds to time steps and the column corresponds to variables.
-#' @return a data.frame. This has the following items:
-#'     V which is names of variables, icon which is assigned icon, and fitted values of trends.
-#' @examples
-#' #icon.asgn(Z)
+    if((x[2] == 1) & (x[5] > 0))
+    {
+      out <- 4
+    }
+  }
 
-icon.asgn <- function(Z){
+  if(group == "Flat")
+  {
+    icons <- c(1, 6, 9, 10)
 
-  ##############################################################################
-  ###   missing interpolation and scaling
-  ##############################################################################
+    if((x[2] == 1) & (abs(x[5]) <= 0.1))
+    {
+      out <- 1
+    }
+  }
 
-  Y <- miss.inpol(Z) %>% scale
-
-  idx.nan <- apply(Y, 2, function(y){all(is.nan(y))}) %>% which
-  if(length(idx.nan) > 0){Y <- Y[,-idx.nan]}
-
-  ##############################################################################
-  ###   trend estimation
-  ##############################################################################
-
-  res <- ctrend(Y)
-
-  out <- data.frame(
-    V = colnames(Y),
-    icon = cbind(1, res$dim, res$coef) %>%  apply(1, icon.fit),
-    res$trend
-  )
+  if(is.null(out))
+  {
+    q <- apply(EstForFitIcons[[group]], 1, function(b){sum(b*x)})
+    out <- (c(1, exp(q)) / (1 + sum(exp(q)))) %>% which.max %>% icons[.]
+  }
 
   return(out)
 }

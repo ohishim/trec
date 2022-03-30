@@ -2,6 +2,8 @@
 #' @description \code{TREC3} This function performs clustering for trends.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom magrittr set_names
+#' @importFrom magrittr extract
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 theme
@@ -12,6 +14,7 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
 #' @importFrom png readPNG
 #' @importFrom gridExtra grid.arrange
 #' @importFrom gt gt
@@ -25,18 +28,26 @@
 #' @importFrom gt cells_column_labels
 #' @importFrom gt tab_stubhead
 #' @param tvar a vector of variable names for target trends.
+#' @param trn the output "trn" of TREC2.
 #' @param argTREC the output "argTREC" of TREC1.
 #' @return some figures for trends and assigned icons
 #' @export
 #' @examples
-#' #TREC3(tnum, argTREC)
+#' #TREC3(tvar, trn, argTREC)
 
-TREC3 <- function(tvar, argTREC){
+TREC3 <- function(tvar, trn, argTREC){
+
+  tvar <- lapply(tvar, function(x){
+    x[
+      strsplit(x, "V") %>% do.call(rbind, .) %>% extract(,2) %>% as.integer %>% order
+    ]
+  }) %>% set_names(names(trn))
+
+  groups <- length(trn)
 
   ggD3 <- argTREC$ggD3
 
-  tr.n <- length(tvar)
-  split <- tr.n > 16
+  tr.n <- unlist(tvar) %>% length
 
   ##############################################################################
   ###   Set target trend corresponding to icon
@@ -48,154 +59,174 @@ TREC3 <- function(tvar, argTREC){
 
   TR <- argTREC$TR
   Labs <- colnames(TR)
-  p <- ncol(TR)
+  L <- list()
 
-  tnum <- which(Labs %in% tvar)
-  tvar <- Labs[tnum]
-
-  if(split)
+  for(j in 1:groups)
   {
-    div.n <- ceiling(tr.n / 16)
+    tvarj <- tvar[[j]]
 
-    if(tr.n %% div.n == 0)
+    if(length(tvarj) == 1)
     {
-      div <- split(
-        tvar,
-        rep(1:div.n, each=tr.n / div.n)
-      )
+      L[[j]] <- rep(tvarj, length(trn[[j]]))
     } else
     {
-      div <- split(
-        tvar,
-        c(
-          rep(1:div.n, tr.n %/% div.n),
-          1:(tr.n %% div.n)
-        ) %>% sort
-      )
+      TRj <- which(Labs %in% trn[[j]]) %>% TR[,.]
+      Labsj <- colnames(TRj)
+      pj <- length(Labsj)
+
+      tnumj <- which(Labsj %in% tvarj)
+
+      TGTRj <- TRj[,tnumj]
+
+      L[[j]] <- sapply(1:pj, function(l){
+        if(l %in% tnumj)
+        {
+          out <- l
+        } else
+        {
+          out <- (TGTRj - TRj[,l]) %>% apply(2, function(x){sum(x^2)}) %>% which.min %>% tnumj[.]
+        }
+        return(out)
+      }) %>% Labsj[.]
     }
-  }
-
-  TGTR <- TR[,tnum]
-
-  L <- sapply(1:p, function(j){
-    if(j %in% tnum)
-    {
-      out <- j
-    } else
-    {
-      tj <- TR[,j]
-      out <- (TGTR - tj) %>% apply(2, function(x){sum(x^2)}) %>% which.min %>% tnum[.]
-    }
-    return(out)
-  }) %>% Labs[.]
-
-  ggD4 <- data.frame(
-    V = ggD3$V %>% unique,
-    L = factor(L, levels=Labs)
-  ) %>% left_join(ggD3, ., by="V")
-
-  if(split)
-  {
-    fig.tgtrend.G <- lapply(1:div.n, function(j){
-      subset(ggD4, L %in% div[[j]]) %>% ggplot() +
-        geom_line(aes(x=x, y=t, col=V)) +
-        facet_wrap(.~L) +
-        theme(
-          axis.title = element_blank()
-        )
-    })
-  } else
-  {
-    fig.tgtrend.G <- ggplot(ggD4) +
-      geom_line(aes(x=x, y=t, col=V)) +
-      facet_wrap(.~L) +
-      theme(
-        axis.title = element_blank()
-      )
-  }
+  } #end for
 
   #=============================================================================
   ###   the target trend plots
   #=============================================================================
 
-  if(split)
+  fig.down <- fig.up <- fig.flat <- NULL
+
+  for(j in 1:groups)
   {
-    fig.tgtrend <- lapply(1:div.n, function(j){
-      subset(ggD4, V %in% div[[j]]) %>% subset(V %in% tvar) %>%
-        ggplot() +
-        geom_line(aes(x=x, y=t)) +
-        facet_wrap(.~V) +
+    tr.nj <- length(tvar[[j]])
+    split <- tr.nj > 16
+
+    ggD4 <- data.frame(
+      V = trn[[j]] %>% factor(., levels=.),
+      L = L[[j]] %>% factor(levels=tvar[[j]])
+    ) %>% left_join(ggD3, by="V")
+
+    if(split)
+    {
+      div.n <- ceiling(tr.nj / 16)
+
+      if(tr.nj %% div.n == 0)
+      {
+        div <- split(
+          tvar[[j]],
+          rep(1:div.n, each=tr.nj / div.n)
+        )
+      } else
+      {
+        div <- split(
+          tvar[[j]],
+          c(
+            rep(1:div.n, tr.nj %/% div.n),
+            1:(tr.nj %% div.n)
+          ) %>% sort
+        )
+      }
+
+      fig <- lapply(1:div.n, function(j){
+        subset(ggD4, L %in% div[[j]]) %>% ggplot() +
+          geom_line(aes(x=x, y=t, col=V)) +
+          facet_wrap(.~L) +
+          theme(
+            axis.title = element_blank()
+          )
+      })
+    } else
+    {
+      fig <- ggplot(ggD4) +
+        geom_line(aes(x=x, y=t, col=V)) +
+        facet_wrap(~L) +
         theme(
           axis.title = element_blank()
         )
-    })
-  } else
-  {
-    fig.tgtrend <- ggD4 %>% subset(V %in% tvar) %>%
-      ggplot() +
-      geom_line(aes(x=x, y=t)) +
-      facet_wrap(.~V) +
-      theme(
-        axis.title = element_blank()
-      )
-  }
+    }
+
+    if(names(trn)[[j]] == "Downward")
+    {
+      fig.down <- fig
+    }
+
+    if(names(trn)[[j]] == "Upward")
+    {
+      fig.up <- fig
+    }
+
+    if(names(trn)[[j]] == "Flat")
+    {
+      fig.flat <- fig
+    }
+  } #end for
 
   ##############################################################################
   ###   Assign icon to the target trends
   ##############################################################################
 
-  Y <- argTREC$Y
+  ttrends <- paths <- group <- list()
 
-  res <- data.frame(
-    V = colnames(Y[,tnum]),
-    icon = cbind(1, argTREC$dim, argTREC$coef)[tnum,] %>%  apply(1, icon.fit),
-    argTREC$TR[,tnum] %>% t
-  )
+  for(j in 1:groups)
+  {
+    tnumj <- which(Labs %in% tvar[[j]])
 
-  n <- ncol(res) - 2
-  p <- nrow(res)
-  ggD <- gather(res, 3:(n+2), key="t", value="y") %>%
-    mutate(
-      x = seq(0, 1, length=n) %>% rep(each=p),
-      V = factor(V, levels=unique(V))
+    res <- data.frame(
+      V = tvar[[j]],
+      g = names(trn)[[j]],
+      icon = cbind(1, argTREC$dim, argTREC$coef)[tnumj,,drop=F] %>% apply(1, function(x){
+        icon.fit(x, names(trn)[j])
+      }),
+      argTREC$TR[,tnumj] %>% t
     )
 
-  yr <- ggD$y %>% range
+    n <- ncol(res) - 3
+    p <- nrow(res)
+    ggD <- gather(res, 4:(n+3), key="t", value="y") %>%
+      mutate(
+        x = seq(0, 1, length=n) %>% rep(each=p),
+        V = factor(V, levels=unique(V))
+      )
 
-  tvar.n <- length(tvar)
+    yr <- ggD$y %>% range
 
-  ttrends <- lapply(1:tvar.n, function(j){
-    ggDj <- subset(ggD, V==tvar[j])
+    tvar.n <- length(tnumj)
 
-    figj <- ggplot() +
-      geom_line(data=ggDj, aes(x=x, y=y), size=2) +
-      theme(
-        axis.title = element_blank(),
-        legend.title = element_blank(),
-        axis.text =  element_blank(),
-        axis.ticks = element_blank()
-      ) +
-      ylim(yr)
-  })
+    ttrends[[j]] <- lapply(1:tvar.n, function(l){
+      ggDj <- subset(ggD, V==tvar[[j]][l])
 
-  paths <- paste0("icon", res$icon, ".png") %>%
-    sapply(function(x){system.file(x, package="trec")})
+      figj <- ggplot() +
+        geom_line(data=ggDj, aes(x=x, y=y), size=2) +
+        theme(
+          axis.title = element_blank(),
+          legend.title = element_blank(),
+          axis.text =  element_blank(),
+          axis.ticks = element_blank()
+        ) +
+        ylim(yr)
+    })
 
-  group <- split(Labs, factor(L, levels=tvar))
+    paths[[j]] <- paste0("icon", res$icon, ".png") %>%
+      sapply(function(x){system.file(x, package="trec")})
+
+    group[[j]] <- split(trn[[j]], factor(L[[j]], levels=tvar[[j]]))
+  } #end for
 
   fig.icon <- data.frame(
-    tvar = tvar,
-    group = sapply(group, function(x){paste(x, collapse=", ")}),
-    trend = 1:tvar.n,
-    icon = 1:tvar.n
-  ) %>% gt(rowname_col = "tvar") %>%
+    tvar = unlist(tvar),
+    g = lapply(1:groups, function(j){rep(names(trn)[[j]], length(tvar[[j]]))}) %>% unlist,
+    group = do.call(c, group) %>%  sapply(function(x){paste(x, collapse=", ")}),
+    trend = 1,
+    icon = 1
+  ) %>% gt(rowname_col = "tvar", groupname_col = "g") %>%
     text_transform(
       locations = cells_body(
         columns = icon
       ),
       fn = function(x) {
         local_image(
-          filename = paths,
+          filename = unlist(paths),
           height = px(50)
         )
       }
@@ -205,7 +236,7 @@ TREC3 <- function(tvar, argTREC){
         columns = trend
       ),
       fn = function(x) {
-        ggplot_image(ttrends, height = px(80))
+        ggplot_image(do.call(c, ttrends), height = px(80))
       }
     ) %>%
     tab_style(
@@ -220,86 +251,16 @@ TREC3 <- function(tvar, argTREC){
 
   print(fig.icon)
 
-  # figs <- lapply(1:tvar.n, function(j){
-  #   ggDj <- subset(ggD, V==tvar[j])
-  #
-  #   figj <- ggplot() +
-  #     geom_line(data=ggDj, aes(x=x, y=y)) +
-  #     facet_wrap(.~V) +
-  #     annotation_raster(
-  #       ImagesOfIcons[[res$icon[j]]],
-  #       xmin = -Inf, xmax = 0.15, ymax = Inf,
-  #       ymin = yr[2] - (3*(yr[2] - yr[1])/10)
-  #     ) +
-  #     theme(
-  #       axis.title = element_blank(),
-  #       legend.title = element_blank(),
-  #       axis.text.x =  element_blank(),
-  #       axis.ticks.x = element_blank()
-  #     ) +
-  #     ylim(yr)
-  # })
-  #
-  # if(split)
-  # {
-  #   div1 <- split(
-  #     1:tr.n,
-  #     lapply(1:div.n, function(j){rep(j, length(div[[j]]))}) %>% unlist
-  #   )
-  #
-  #   fig.icon <- lapply(1:div.n, function(j){
-  #
-  #     idx <- div1[[j]]
-  #     idx.n <- length(idx)
-  #
-  #     if(idx.n <= 3)
-  #     {
-  #       fig.col <- idx.n
-  #     } else if(idx.n == 4)
-  #     {
-  #       fig.col <- 2
-  #     } else
-  #     {
-  #       fig.col <- 3
-  #     }
-  #
-  #     fig.icon <- do.call(
-  #       grid.arrange,
-  #       c(figs[idx], list(ncol=fig.col))
-  #     )
-  #   })
-  # } else
-  # {
-  #   if(tvar.n <= 3)
-  #   {
-  #     fig.col <- tvar.n
-  #   } else if(tvar.n == 4)
-  #   {
-  #     fig.col <- 2
-  #   } else
-  #   {
-  #     fig.col <- 3
-  #   }
-  #
-  #   fig.icon <- do.call(
-  #     grid.arrange,
-  #     c(figs, list(ncol=fig.col))
-  #   )
-  # }
-
   ##############################################################################
   ###   Output
   ##############################################################################
 
   Out <- list(
-    fig.tgtrend.G = fig.tgtrend.G,
-    fig.tgtrend = fig.tgtrend,
-    fig.icon = fig.icon,
-    group = group
+    fig.down = fig.down,
+    fig.up = fig.up,
+    fig.flat = fig.flat,
+    fig.icon = fig.icon
   )
-
-  cat("variables for each group: \n")
-  print(Out$group)
 
   return(Out)
 }

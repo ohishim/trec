@@ -6,6 +6,7 @@
 #' @return trend: a matrix of fitted values.
 #' @return dim: a matrix of dimensions of estimated trends.
 #' @return coef: a matrix of estimates.
+#' @return pbw: a matrix of prediction band widths.
 #' @examples
 #' #ctrend(Y)
 
@@ -73,10 +74,34 @@ ctrend <- function(Y){
   }) %>% do.call(rbind, .) %>% data.frame
   colnames(trend) <- paste0("t", 1:n)
 
+  barx <- mean(x)
+  Sx <- sum((x - barx)^2)
+  S <- ((x - barx)^2) / Sx
+  v0 <- sapply(1:3, function(pj){
+    Xj <- X[,1:(pj+1)]
+    Minvj <- Minv[[pj]]
+    return(
+      diag(Xj %*% Minvj %*% t(Xj))
+    )
+  })
+
+  PBW <- sapply(1:p, function(j){
+    yj <- Y[,j]
+    Betaj <- Coef[j,]
+    pj <- opt[j]
+    s2 <- sum((yj - X%*%Betaj)^2) / (n-pj-1)
+    v <- s2 * (1 + v0[,pj])
+
+    return(
+      qt(0.975, n-pj-1) * sqrt( (1+(1/n)+S) * v )
+    )
+  })
+
   out <- list(
     trend = trend,
     dim = Dim,
-    coef = Coef
+    coef = Coef,
+    pbw = t(PBW)
   )
 
   return(out)

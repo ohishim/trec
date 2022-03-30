@@ -2,6 +2,7 @@
 #' @description \code{TREC2} This function performs clustering for trends.
 #'
 #' @importFrom magrittr %>%
+#' @importFrom magrittr set_names
 #' @importFrom dendextend set
 #' @importFrom gridExtra grid.arrange
 #' @importFrom ggplot2 ggplot
@@ -16,6 +17,7 @@
 #' @importFrom dplyr case_when
 #' @importFrom rlist list.findi
 #' @param argTREC the output "argTREC" of TREC1
+#' @param method clustering method
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
 #' @return a dendrogram
@@ -23,7 +25,9 @@
 #' @examples
 #' #TREC2(argTREC)
 
-TREC2 <- function(argTREC, pvar=NULL, groups=2){
+TREC2 <- function(argTREC, method=c("dend", "D"), pvar=NULL, groups=2){
+
+  method <- method[1]
 
   TR <- argTREC$TR
   Labs <- colnames(TR)
@@ -42,169 +46,140 @@ TREC2 <- function(argTREC, pvar=NULL, groups=2){
 
   dd <- sapply(1:p, function(j){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
-  })
-  names(dd) <- Labs
+  }) %>% set_names(Labs)
 
-  HClust <- dd %>% dist %>% hclust(method = "centroid")
-
-  Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
-
-  DUtr <- c(which.max(dd), which.min(dd)) %>% Labs[.]
-  trn0 <- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
-
-  trn <<- lapply(1:groups, function(j){
-    if(j < 3)
-    {
-      idx <- list.findi(trn0, DUtr[j] %in% .)
-    } else
-    {
-      idx <- list.findi(trn0, !any(DUtr %in% .))
-    }
-
-    return(trn0[[idx]])
-  })
-  names(trn) <<- c("Downward", "Upward", "Flat")[1:groups]
-
-  plot(Dend)
-
-  Out <- list(
-    dend = Dend
-  )
-
-  ans <- ""
-  while(!ans %in% c("yes", "no"))
+  if(method == "dend")
   {
-    ans <- readline("Do you want to more concrete classification? Please enter yes or no: ")
-  }
+    HClust <- dd %>% dist %>% hclust(method = "centroid")
+    Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
 
-  if(ans == "yes")
-  {
-    # names(trn) <- paste0("trn", 1:groups)
+    DUtr <- c(which.max(dd), which.min(dd)) %>% Labs[.]
+    trn0 <- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
 
-    cat(
-      "The variables are divided the following two/three groups: \n"
-    )
-    print(trn)
-
-    ggD3 <- argTREC$ggD3
-
-    ran <- range(ggD3$t)
-
-    TRN <- lapply(1:groups, function(j){
-      cbind(trn = j, V = trn[[j]])
-    }) %>% do.call(rbind, .) %>% data.frame %>%
-      mutate(V = factor(V, levels=Labs))
-
-    Labs1 <- paste(TRN$trn, TRN$V, sep="-")
-
-    TRN1 <- mutate(TRN, V1 = Labs1) %>%
-      right_join(ggD3, by="V") %>%
-      select(V0=V, V=V1, everything()) %>%
-      mutate(
-        V = factor(V, levels=Labs1),
-        group = case_when(
-          trn == 1 ~ "1.Downward",
-          trn == 2 ~ "2.Upward",
-          trn == 3 ~ "3.Flat"
-        )
-      )
-
-    fig.trends <- subplot(
-      lapply(1:groups, function(j){
-        fig <- subset(TRN1, trn==j) %>%
-          ggplot() +
-          geom_line(aes(x=x, y=t, col=V)) +
-          theme(
-            axis.title = element_blank()
-          ) +
-          ylim(ran) +
-          facet_wrap(~group)
-
-        if(j != 1)
-        {
-          fig <- fig + theme(
-            axis.text.y = element_blank(),
-            axis.ticks.y = element_blank()
-          )
-        }
-
-        return(fig)
-      })
-    )
-
-    print(fig.trends)
-
-    # fig.trend1 <- ggD3 %>% subset(V %in% trn[[1]]) %>% ggplot() +
-    #   geom_line(aes(x=x, y=t, col=V)) +
-    #   theme(
-    #     axis.title = element_blank(),
-    #     axis.text.x = element_blank(),
-    #     axis.ticks.x = element_blank()
-    #   ) +
-    #   ylim(ran)
-    #
-    # fig.trend2 <- ggD3 %>% subset(V %in% trn[[2]]) %>% ggplot() +
-    #   geom_line(aes(x=x, y=t, col=V)) +
-    #   theme(
-    #     axis.title = element_blank(),
-    #     axis.text.x = element_blank(),
-    #     axis.ticks.x = element_blank()
-    #   ) +
-    #   ylim(ran)
-    #
-    # if(groups == 2)
-    # {
-    #   fig.trends <- grid.arrange(fig.trend1, fig.trend2, ncol=2)
-    # } else if(groups == 3)
-    # {
-    #   fig.trend3 <- ggD3 %>% subset(V %in% trn[[3]]) %>% ggplot() +
-    #     geom_line(aes(x=x, y=t, col=V)) +
-    #     theme(
-    #       axis.title = element_blank(),
-    #       axis.text.x = element_blank(),
-    #       axis.ticks.x = element_blank()
-    #     ) +
-    #     ylim(ran)
-    #
-    #   fig.trends <- grid.arrange(fig.trend1, fig.trend2, fig.trend3, ncol=3)
-    # }
-
-    ans1 <- ""
-    while(!ans1 %in% c("yes", "no"))
-    {
-      ans1 <- readline("Do you need some modifications? Please enter yes or no: ")
-    }
-
-    if(ans1 == "no")
-    {
-      Out[[2]] <- fig.trends
-      names(Out)[2] <- "fig.trends"
-
-      cat("Select tvar and proceed TREC3.\n")
-      cat("You have 'trn' object for TREC3.\n")
-    } else
-    {
-      trn1 <<- trn[[1]]
-      trn2 <<- trn[[2]]
-
-      if(groups==2)
+    trn <- lapply(1:groups, function(j){
+      if(j < 3)
       {
-        cat("You can use three objects 'trn', 'trn1', and 'trn2' to modify the groups.\n")
-        cat("Redefine 'trn' and execute TREC2.1.\n")
+        idx <- list.findi(trn0, DUtr[j] %in% .)
       } else
       {
-        trn3 <<- trn[[3]]
-
-        cat("You can use three objects 'trn', 'trn1', 'trn2', and 'trn3' to modify the groups.\n")
-        cat("Redefine 'trn' and execute TREC2.1.\n")
+        idx <- list.findi(trn0, !any(DUtr %in% .))
       }
+
+      return(trn0[[idx]])
+    }) %>% set_names(c("Downward", "Upward", "Flat")[1:groups])
+
+    out0 <- function(){plot(Dend)}
+    Gidx <- 1:groups
+  }
+
+  if(method == "D")
+  {
+    if(groups == 2)
+    {
+      trni <- list(
+        which(dd > 0),
+        which(dd < 0)
+      )
+
+      trn <- lapply(trni, function(x){Labs[x]}) %>% set_names(
+        c("Downward", "Upward")
+      )
     }
 
-  } else
-  {
-    cat("trec procedure terminates.\n")
-    cat("You have variables for each group as 'trn' object.\n")
+    if(groups == 3)
+    {
+      t3 <- seq(-0.1, 0.1, length=nrow(TR))
+      q <- abs(sum((t1 - t3)^2) - sum((t2 - t3)^2))
+
+      trni <- list(
+        which(dd > q),
+        which(dd < -q),
+        which(abs(dd) <= q)
+      )
+
+      trn <- lapply(trni, function(x){Labs[x]}) %>% set_names(
+        c("Downward", "Upward", "Flat")
+      )
+    }
+
+    Dend <- lapply(trni, function(x){
+      if(length(x) >= 2)
+      {
+        dd[x] %>% dist %>% hclust(method = "centroid") %>% as.dendrogram %>% set()
+      } else
+      {
+        NULL
+      }
+    })
+
+    dendplot <- function(){
+      idx <- sapply(trni, length)
+
+      par(mfcol=c(1,sum(idx>1)))
+      for(j in which(idx > 1))
+      {
+        plot(Dend[[j]], main=names(trn)[j])
+      }
+      par(mfcol=c(1,1))
+    }
+
+    out0 <- dendplot
+    Gidx <- which(sapply(trn, length) > 0)
   }
+
+  ggD3 <- argTREC$ggD3
+
+  ran <- range(ggD3$t)
+
+  TRN <- lapply(Gidx, function(j){
+    cbind(trn = j, V = trn[[j]])
+  }) %>% do.call(rbind, .) %>% data.frame %>%
+    mutate(V = factor(V, levels=Labs))
+
+  Labs1 <- paste(TRN$trn, TRN$V, sep="-")
+
+  TRN1 <- mutate(TRN, V1 = Labs1) %>%
+    right_join(ggD3, by="V") %>%
+    select(V0=V, V=V1, everything()) %>%
+    mutate(
+      V = factor(V, levels=Labs1),
+      group = case_when(
+        trn == 1 ~ "1.Downward",
+        trn == 2 ~ "2.Upward",
+        trn == 3 ~ "3.Flat"
+      )
+    )
+
+  fig.trends <- subplot(
+    lapply(Gidx, function(j){
+      fig <- subset(TRN1, trn==j) %>%
+        ggplot() +
+        geom_line(aes(x=x, y=t, col=V)) +
+        theme(
+          axis.title = element_blank()
+        ) +
+        ylim(ran) +
+        facet_wrap(~group)
+
+      if(j != 1)
+      {
+        fig <- fig + theme(
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank()
+        )
+      }
+
+      return(fig)
+    })
+  )
+
+  print(fig.trends)
+
+  Out <- list(
+    dend = out0,
+    fig.trends = fig.trends,
+    trn = trn
+  )
 
   return(Out)
 }

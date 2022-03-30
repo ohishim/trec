@@ -15,6 +15,8 @@ trend: a matrix of fitted values.
 dim: a matrix of dimensions of estimated trends.
 
 coef: a matrix of estimates.
+
+pbw: a matrix of prediction band widths.
 }
 \description{
 \code{ctrend} This function estimates cubic trends.

@@ -8,6 +8,7 @@
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 geom_ribbon
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @importFrom plotly ggplotly
@@ -180,12 +181,14 @@ TREC1 <- function(Y){
   ggD3 <- as.data.frame(TR) %>% gather(1:p, key="V", value="t") %>% mutate(
     V = ggD2$V,
     y = ggD2$y,
-    x = ggD2$x
+    x = ggD2$x,
+    w = as.vector(t(res$pbw))
   )
 
   if(p <= 16)
   {
     fig.ctrend <- ggplot(ggD3) +
+      geom_ribbon(aes(x=x, ymin=t-w, ymax=t+w), alpha=0.2) +
       geom_line(aes(x=x, y=y)) +
       geom_line(aes(x=x, y=t), col="red")+
       facet_wrap(. ~ V) +
@@ -197,6 +200,7 @@ TREC1 <- function(Y){
   {
     fig.ctrend <- lapply(1:length(div), function(j){
       subset(ggD3, V %in% div[[j]]) %>% ggplot() +
+        ggplot2::geom_ribbon(aes(x=x, ymin=t-w, ymax=t+w), alpha=0.2) +
         geom_line(aes(x=x, y=y)) +
         geom_line(aes(x=x, y=t), col="red") +
         facet_wrap(. ~ V) +

@@ -4,10 +4,12 @@
 \alias{icon.fit}
 \title{Calculate fitted values}
 \usage{
-icon.fit(x)
+icon.fit(x, group)
 }
 \arguments{
 \item{x}{a vector of explanatory variables.}
+
+\item{group}{Downward or Upward or Flat.}
 }
 \value{
 a fitted value.
