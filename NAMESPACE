@@ -2,7 +2,6 @@
 
 export(TREC1)
 export(TREC2)
-export(TREC2.1)
 export(TREC3)
 importFrom(dendextend,set)
 importFrom(dplyr,arrange)
