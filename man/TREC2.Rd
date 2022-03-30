@@ -4,12 +4,13 @@
 \alias{TREC2}
 \title{The second step of TREC}
 \usage{
-TREC2(argTREC, method = c("dend", "D"), pvar = NULL, groups = 2)
+TREC2(argTREC, clustering = TRUE, pvar = NULL, groups = 2)
 }
 \arguments{
 \item{argTREC}{the output "argTREC" of TREC1}
 
-\item{method}{clustering method}
+\item{clustering}{if TRUE, clustering by a dendorogram (default);
+if FALSE, discrimination by the criterion}
 
 \item{pvar}{two variable names for representative trends (option)}
 
@@ -19,7 +20,7 @@ TREC2(argTREC, method = c("dend", "D"), pvar = NULL, groups = 2)
 a dendrogram
 }
 \description{
-\code{TREC2} This function performs clustering for trends.
+\code{TREC2} This function performs rough classification of trends.
 }
 \examples{
 #TREC2(argTREC)

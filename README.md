@@ -49,8 +49,8 @@ A classification into two groups can be executed as follows:
 res2 <- TREC2(res1$argTREC)
 ```
 If you want to classify into three groups, you can set `groups=3` as an argument of `TREC2`.
-The above code classifies by using dendrogram (this is default).
-The `TREC2` has the other option that is classification without dendrogram, which is performed by setting of `method="D"`.
+The classification by the above code is a clustering by a dendrogram (this is default).
+The `TREC2` has the other option that is a discrimination by the criterion, which is performed by setting of `clustering=FALSE`.
 Moreover, in default, the classification is performed based on the two fixed (but data-dependent) linear trends.
 You can also select two trends like this:
 ``` r

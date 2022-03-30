@@ -1,5 +1,5 @@
 #' @title The second step of TREC
-#' @description \code{TREC2} This function performs clustering for trends.
+#' @description \code{TREC2} This function performs rough classification of trends.
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr set_names
@@ -17,7 +17,8 @@
 #' @importFrom dplyr case_when
 #' @importFrom rlist list.findi
 #' @param argTREC the output "argTREC" of TREC1
-#' @param method clustering method
+#' @param clustering if TRUE, clustering by a dendorogram (default);
+#'   if FALSE, discrimination by the criterion
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
 #' @return a dendrogram
@@ -25,7 +26,7 @@
 #' @examples
 #' #TREC2(argTREC)
 
-TREC2 <- function(argTREC, method=c("dend", "D"), pvar=NULL, groups=2){
+TREC2 <- function(argTREC, clustering=TRUE, pvar=NULL, groups=2){
 
   method <- method[1]
 
@@ -48,7 +49,7 @@ TREC2 <- function(argTREC, method=c("dend", "D"), pvar=NULL, groups=2){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
   }) %>% set_names(Labs)
 
-  if(method == "dend")
+  if(clustering)
   {
     HClust <- dd %>% dist %>% hclust(method = "centroid")
     Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
@@ -72,7 +73,7 @@ TREC2 <- function(argTREC, method=c("dend", "D"), pvar=NULL, groups=2){
     Gidx <- 1:groups
   }
 
-  if(method == "D")
+  if(!clustering)
   {
     if(groups == 2)
     {
