@@ -28,8 +28,6 @@
 
 TREC2 <- function(argTREC, clustering=TRUE, pvar=NULL, groups=2){
 
-  method <- method[1]
-
   TR <- argTREC$TR
   Labs <- colnames(TR)
   p <- ncol(TR)
