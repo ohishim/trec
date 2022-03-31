@@ -5,7 +5,9 @@
 <!-- badges: end -->
 
 This package is for fit cubic trends to multivariate time series observations and classify the trends.
-When observations are inputted, you can obtain estimated trends and icons assigned to the trends.
+When observations are inputted, you can obtain estimated trends and icons assigned to the trends.  
+
+test url: https://github.com/ohishim/trec/test.html
 
 ## Installation
 
