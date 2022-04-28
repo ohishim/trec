@@ -1,6 +1,8 @@
 #' @title Estimate cubic trend
 #' @description \code{ctrend} This function estimates cubic trends.
 #'
+#' @importFrom stats var
+#' @importFrom stats qt
 #' @importFrom magrittr %>%
 #' @param Y an observation matrix. The row corresponds to time steps and the column corresponds to variables.
 #' @return trend: a matrix of fitted values.

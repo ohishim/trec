@@ -4,6 +4,7 @@
 #'
 #' @format A data frame with 20 rows and 9 variables:
 #' \describe{
+#'   \item{year}{time points}
 #'   \item{R}{variable 1}
 #'   \item{Q}{variable 2}
 #'   \item{A}{variable 3}

@@ -28,8 +28,8 @@
 #' @importFrom gt cells_column_labels
 #' @importFrom gt tab_stubhead
 #' @param tvar a vector of variable names for target trends.
-#' @param trn the output "trn" of TREC2.
-#' @param argTREC the output "argTREC" of TREC1.
+#' @param trn the output `trn` of `TREC2`.
+#' @param argTREC the output `argTREC` of `TREC1`.
 #' @return some figures for trends and assigned icons
 #' @export
 #' @examples
@@ -37,11 +37,7 @@
 
 TREC3 <- function(tvar, trn, argTREC){
 
-  tvar <- lapply(tvar, function(x){
-    x[
-      strsplit(x, "V") %>% do.call(rbind, .) %>% extract(,2) %>% as.integer %>% order
-    ]
-  }) %>% set_names(names(trn))
+  trn <- which(names(trn) %in% names(tvar)) %>% trn[.]
 
   groups <- length(trn)
 
@@ -167,6 +163,7 @@ TREC3 <- function(tvar, trn, argTREC){
   ##############################################################################
 
   ttrends <- paths <- group <- list()
+  yr <- ggD3$t %>% range
 
   for(j in 1:groups)
   {
@@ -189,7 +186,7 @@ TREC3 <- function(tvar, trn, argTREC){
         V = factor(V, levels=unique(V))
       )
 
-    yr <- ggD$y %>% range
+    # yr <- ggD$y %>% range
 
     tvar.n <- length(tnumj)
 

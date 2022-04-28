@@ -4,10 +4,12 @@
 \alias{TREC1}
 \title{The first step of TREC}
 \usage{
-TREC1(Y)
+TREC1(Y, time.points = NULL)
 }
 \arguments{
-\item{Y}{an observation matrix. The row corresponds to time steps and the column corresponds to variables.}
+\item{Y}{an observation matrix; the row corresponds to time steps and the column corresponds to variables.}
+
+\item{time.points}{a column name of \code{Y} expressing time points, if need; default is \code{NULL}.}
 }
 \value{
 some figures for observed data and estimated trend, and arguments for next steps.

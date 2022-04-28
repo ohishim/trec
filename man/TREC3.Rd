@@ -9,9 +9,9 @@ TREC3(tvar, trn, argTREC)
 \arguments{
 \item{tvar}{a vector of variable names for target trends.}
 
-\item{trn}{the output "trn" of TREC2.}
+\item{trn}{the output \code{trn} of \code{TREC2}.}
 
-\item{argTREC}{the output "argTREC" of TREC1.}
+\item{argTREC}{the output \code{argTREC} of \code{TREC1}.}
 }
 \value{
 some figures for trends and assigned icons

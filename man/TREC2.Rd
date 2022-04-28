@@ -7,10 +7,10 @@
 TREC2(argTREC, clustering = TRUE, pvar = NULL, groups = 2)
 }
 \arguments{
-\item{argTREC}{the output "argTREC" of TREC1}
+\item{argTREC}{the output \code{argTREC} of \code{TREC1}}
 
-\item{clustering}{if TRUE, clustering by a dendorogram (default);
-if FALSE, discrimination by the criterion}
+\item{clustering}{if \code{TRUE}, clustering by a dendorogram (default);
+if \code{FALSE}, discrimination by the criterion}
 
 \item{pvar}{two variable names for representative trends (option)}
 

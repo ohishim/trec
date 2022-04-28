@@ -1,6 +1,7 @@
 #' @title Missing interpolation
 #' @description \code{miss.inpol} This function takes a linear interpolation to missing data.
 #'
+#' @importFrom stats approx
 #' @importFrom magrittr %>%
 #' @param X a matrix of an observed data.
 #' @return a matrix of the observed data with a linear interpolation.

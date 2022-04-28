@@ -2,10 +2,11 @@
 
 #---   exported
 exData <- read.table("inst/exData.txt")
+exData <- mutate(exData, year = 2001:2020) %>%
+  dplyr::select(year, everything())
 usethis::use_data(exData, overwrite = TRUE)
 
 #---  internal
-# EstForFitIcons <- read.csv("inst/coefficients.csv")
 EstForFitIcons <- read.csv("inst/MLDcoef.csv") %>%
   mutate(
     group = factor(group, c("Downward", "Upward", "Flat"))

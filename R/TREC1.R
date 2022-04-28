@@ -12,13 +12,24 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @importFrom plotly ggplotly
-#' @param Y an observation matrix. The row corresponds to time steps and the column corresponds to variables.
+#' @param Y an observation matrix; the row corresponds to time steps and the column corresponds to variables.
+#' @param time.points a column name of `Y` expressing time points, if need; default is `NULL`.
 #' @return some figures for observed data and estimated trend, and arguments for next steps.
 #' @export
 #' @examples
 #' #TREC1(Y)
 
-TREC1 <- function(Y){
+TREC1 <- function(Y, time.points=NULL){
+
+  if(is.null(time.points))
+  {
+    time.points <- 1:nrow(Y)
+  } else
+  {
+    time.idx <- which(colnames(Y) == time.points)
+    time.points <- Y[,time.idx]
+    Y <- Y[,-time.idx]
+  }
 
   k <- ncol(Y)
   Labs <- paste0("V", 1:k)
@@ -32,7 +43,7 @@ TREC1 <- function(Y){
     names(Y) <- Labs
     names(Y0) <- paste0(Labs, " (", Vnames[1,], ")")
 
-    cat("The variable names are represented as follows: \n")
+    message("The variable names are represented as follows:")
     print(Vnames)
   } else
   {
@@ -44,7 +55,7 @@ TREC1 <- function(Y){
   ##############################################################################
 
   ggD1 <- data.frame(
-    x = 1:nrow(Y0), #seq(0, 1, length=nrow(Y0)),
+    x = time.points,
     Y0
   )
   names(ggD1) <- c("x", names(Y0))
@@ -111,7 +122,7 @@ TREC1 <- function(Y){
 
     if(!is.null(Vnames)){Vnames <- Vnames[,-idx.rm]}
 
-    cat("The following variable(s) is/are removed: \n")
+    message("The following variable(s) is/are removed:")
     print(Vrm)
   } else
   {
@@ -123,7 +134,7 @@ TREC1 <- function(Y){
   ##############################################################################
 
   ggD2 <- data.frame(
-    x = 1:nrow(Y), #seq(0, 1, length=nrow(Y)),
+    x = time.points,
     Y
   ) %>% gather(2:(p+1), key="V", value="y") %>%
     mutate(V = factor(V, levels=colnames(Y)))

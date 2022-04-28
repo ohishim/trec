@@ -1,6 +1,11 @@
 #' @title The second step of TREC
 #' @description \code{TREC2} This function performs rough classification of trends.
 #'
+#' @importFrom stats dist
+#' @importFrom stats hclust
+#' @importFrom stats as.dendrogram
+#' @importFrom stats cutree
+#' @importFrom graphics par
 #' @importFrom magrittr %>%
 #' @importFrom magrittr set_names
 #' @importFrom dendextend set
@@ -16,9 +21,9 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr case_when
 #' @importFrom rlist list.findi
-#' @param argTREC the output "argTREC" of TREC1
-#' @param clustering if TRUE, clustering by a dendorogram (default);
-#'   if FALSE, discrimination by the criterion
+#' @param argTREC the output `argTREC` of `TREC1`
+#' @param clustering if `TRUE`, clustering by a dendorogram (default);
+#'   if `FALSE`, discrimination by the criterion
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
 #' @return a dendrogram
@@ -124,6 +129,18 @@ TREC2 <- function(argTREC, clustering=TRUE, pvar=NULL, groups=2){
 
     out0 <- dendplot
     Gidx <- which(sapply(trn, length) > 0)
+
+    na.idx <- which(sapply(trni, length) == 0)
+    if(length(na.idx) > 0)
+    {
+      message("The following group(s) is/are not applicable: ")
+      print(names(trn)[na.idx])
+
+      for(i in na.idx)
+      {
+        trn[[i]] <- "not applicable"
+      }
+    }
   }
 
   ggD3 <- argTREC$ggD3
