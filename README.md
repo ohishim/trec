@@ -22,15 +22,20 @@ This is a basic example which shows you how to solve a common problem:
 
 ### the first step
 
-You can use an example dataset `exData` which has 9 variables with 20 time steps.
+You can use an example dataset `exData` which has 10 variables with 20 time steps, where `year` is time points.
 This step is executed as follows:
 
 ``` r
 library(trec)
 
-res1 <- TREC1(exData)
+res1 <- TREC1(
+  exData,  # dataset
+  "year"   # variable name expressing time points if the dataset has it
+)
 ```
-In `TREC1`, the variable names of `exData` are automatically represented by V1, ..., V9.
+If the dataset has a variable expressing time points, you must enter the variable name as the second parameter.
+If not, you can ignore the second parameter.
+In `TREC1`, the variable names of the dataset are automatically represented by V1, V2, ...
 A relationship between the original names and the represented names is automatically output on R console with the message `The variable names are represented as follows:`.
 If there are removed variables for estimation, they are also displayed.
 You can obtain the represented and the removed variables by `res1$Vnames` and `res1$remove`, respectively.
@@ -42,17 +47,22 @@ If the number of variables is larger than 16, you should enter `res1$fig.ctrend[
 
 ### the second step
 
-The second step performs rough classification of estimated trends into two or three groups.
-A classification into two groups can be executed as follows:
+The second step performs rough classification of estimated trends into two or three groups, where the two groups are "Downward" and "Upward", and the three groups are the two groups and "Flat".
+A classification into two groups, i.e., "Downward" and "Upward" groups can be executed as follows:
 
 ``` r
 res2 <- TREC2(res1$argTREC)
 ```
-If you want to classify into three groups, you can set `groups=3` as an argument of `TREC2`.
+If you want to classify into three groups, i.e., you also need "Flat" group, you can set `groups=3` as an argument of `TREC2`.
 The classification by the above code is a clustering by a dendrogram (this is default).
 The `TREC2` has the other option that is a discrimination by the criterion, which is performed by setting of `clustering=FALSE`.
+Since the classification by `clustering=FALSE` is not clustering, "not applicable" groups may exist.
+Actually for `exData`, "Flat" group is not applicable by the following classification.
+```r
+res2 <- TREC2(res1$argTREC, clustering=FALSE, groups=3)
+```
 Moreover, in default, the classification is performed based on the two fixed (but data-dependent) linear trends.
-You can also select two trends like this:
+You can also select the two trends like this:
 ``` r
 res2 <- TREC2(res1$argTREC, pvar=c("V2", "V7"))
 ```
@@ -69,12 +79,13 @@ To more concrete classification, this step is performed.
 First, you have to select target trends for each group like this:
 ```r 
 tvar <- list(
-  paste0("V", c(1, 3, 9)),  # selected from res2$trn[[1]]
-  paste0("V", c(2, 5))      # selected from res2$trn[[2]]
+  Downward = paste0("V", c(1, 3, 9)),  # selected from res2$trn[[1]]
+  Upward = paste0("V", c(2, 5))        # selected from res2$trn[[2]]
 )
 ```
 where each element of `tvar` must be selected from the corresponding element of `res2$trn`.
-If `res2$trn` has three elements, `tvar` must have three elements.
+If you classified in three groups, you must add the third element "Flat" in `tvar`.
+When not applicable groups exist, you must make the corresponding elements `NULL`.
 Then, this step is executed as follows:
 
 ``` r
