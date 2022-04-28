@@ -30,7 +30,14 @@
 #' @param tvar a vector of variable names for target trends.
 #' @param trn the output `trn` of `TREC2`.
 #' @param argTREC the output `argTREC` of `TREC1`.
-#' @return some figures for trends and assigned icons
+#' @return a list of concrete classification results which has the following elements:
+#' \item{fig.down}{a figure of estimated trends for each group in "Downward"}
+#'
+#' \item{fig.up}{a figure of estimated trends for each group in "Upward"}
+#'
+#' \item{fig.flat}{a figure of estimated trends for each group in "Flat"}
+#'
+#' \item{fig.icon}{summary}
 #' @export
 #' @examples
 #' #TREC3(tvar, trn, argTREC)

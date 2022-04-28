@@ -17,7 +17,12 @@ if \code{FALSE}, discrimination by the criterion}
 \item{groups}{the number of groups for classification}
 }
 \value{
-a dendrogram
+a list of classification results which has the following elements:
+\item{dend}{a fanction with no parameter to draw a dendrogram}
+
+\item{fig.trends}{a figure of estimated trends for each classified group}
+
+\item{trn}{a list of variable names for each classified group}
 }
 \description{
 \code{TREC2} This function performs rough classification of trends.

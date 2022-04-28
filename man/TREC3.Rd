@@ -14,7 +14,14 @@ TREC3(tvar, trn, argTREC)
 \item{argTREC}{the output \code{argTREC} of \code{TREC1}.}
 }
 \value{
-some figures for trends and assigned icons
+a list of concrete classification results which has the following elements:
+\item{fig.down}{a figure of estimated trends for each group in "Downward"}
+
+\item{fig.up}{a figure of estimated trends for each group in "Upward"}
+
+\item{fig.flat}{a figure of estimated trends for each group in "Flat"}
+
+\item{fig.icon}{summary}
 }
 \description{
 \code{TREC3} This function performs clustering for trends.

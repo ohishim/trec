@@ -12,7 +12,22 @@ TREC1(Y, time.points = NULL)
 \item{time.points}{a column name of \code{Y} expressing time points, if need; default is \code{NULL}.}
 }
 \value{
-some figures for observed data and estimated trend, and arguments for next steps.
+a list of results for trend estimation which has the following elements:
+\item{fig.RawData}{a figure of raw data plot}
+
+\item{fig.StdData}{a figure of standardized data plot}
+
+\item{fig.ctrend}{a figure of estimated trends with prediction band for each variable;
+if the number of variables is larger than 16, this is a list of figures}
+
+\item{fig.trend}{a figure of all estimated trends}
+
+\item{argTREC}{a list required in \code{TREC2}}
+
+\item{remove}{removed variable names}
+
+\item{Vnames}{a relationship between the original variable names and
+the represented variable names}
 }
 \description{
 \code{TREC1} This function estimates cubic trends for multivariate time series observations.

@@ -14,7 +14,22 @@
 #' @importFrom plotly ggplotly
 #' @param Y an observation matrix; the row corresponds to time steps and the column corresponds to variables.
 #' @param time.points a column name of `Y` expressing time points, if need; default is `NULL`.
-#' @return some figures for observed data and estimated trend, and arguments for next steps.
+#' @return a list of results for trend estimation which has the following elements:
+#' \item{fig.RawData}{a figure of raw data plot}
+#'
+#' \item{fig.StdData}{a figure of standardized data plot}
+#'
+#' \item{fig.ctrend}{a figure of estimated trends with prediction band for each variable;
+#'     if the number of variables is larger than 16, this is a list of figures}
+#'
+#' \item{fig.trend}{a figure of all estimated trends}
+#'
+#' \item{argTREC}{a list required in `TREC2`}
+#'
+#' \item{remove}{removed variable names}
+#'
+#' \item{Vnames}{a relationship between the original variable names and
+#'     the represented variable names}
 #' @export
 #' @examples
 #' #TREC1(Y)

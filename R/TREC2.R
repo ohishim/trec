@@ -26,7 +26,12 @@
 #'   if `FALSE`, discrimination by the criterion
 #' @param pvar two variable names for representative trends (option)
 #' @param groups the number of groups for classification
-#' @return a dendrogram
+#' @return a list of classification results which has the following elements:
+#' \item{dend}{a fanction with no parameter to draw a dendrogram}
+#'
+#' \item{fig.trends}{a figure of estimated trends for each classified group}
+#'
+#' \item{trn}{a list of variable names for each classified group}
 #' @export
 #' @examples
 #' #TREC2(argTREC)
