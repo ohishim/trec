@@ -50,6 +50,7 @@ TREC1 <- function(Y, time.points=NULL){
 
   k <- ncol(Y)
   Labs <- paste0("V", 1:k)
+  if(is.null(colnames(Y))){colnames(Y) <- Labs}
   Y0 <- Y
 
   if(!all(Labs == names(Y0)))
