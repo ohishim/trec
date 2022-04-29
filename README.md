@@ -59,12 +59,12 @@ The `TREC2` has the other option that is a discrimination by the criterion, whic
 Since the classification by `clustering=FALSE` is not clustering, "not applicable" groups may exist.
 Actually for `exData`, "Flat" group is not applicable by the following classification.
 ```r
-res2 <- TREC2(res1$argTREC, clustering=FALSE, groups=3)
+TREC2(res1$argTREC, clustering=FALSE, groups=3)
 ```
 Moreover, in default, the classification is performed based on the two fixed (but data-dependent) linear trends.
 You can also select the two trends like this:
 ``` r
-res2 <- TREC2(res1$argTREC, pvar=c("V2", "V7"))
+TREC2(res1$argTREC, pvar=c("V2", "V7"))
 ```
 
 The `TREC2` outputs a figure of group-wise trends obtained by the discrimination.
@@ -85,7 +85,7 @@ tvar <- list(
 ```
 where each element of `tvar` must be selected from the corresponding element of `res2$trn`.
 If you classified in three groups, you must add the third element "Flat" in `tvar`.
-When not applicable groups exist, you must make the corresponding elements `NULL`.
+Notice that not applicable groups are not need to define in `tvar`.
 Then, this step is executed as follows:
 
 ``` r
