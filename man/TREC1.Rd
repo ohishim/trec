@@ -13,9 +13,11 @@ TREC1(Y, time.points = NULL)
 }
 \value{
 a list of results for trend estimation which has the following elements:
-\item{fig.RawData}{a figure of raw data plot}
+\item{fig.RawData}{a figure of raw data plot;
+if the number of variables is larger than 16, this is a list of figures}
 
-\item{fig.StdData}{a figure of standardized data plot}
+\item{fig.StdData}{a figure of standardized data plot;
+if the number of variables is larger than 16, this is a list of figures}
 
 \item{fig.ctrend}{a figure of estimated trends with prediction band for each variable;
 if the number of variables is larger than 16, this is a list of figures}

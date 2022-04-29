@@ -15,11 +15,14 @@ TREC3(tvar, trn, argTREC)
 }
 \value{
 a list of concrete classification results which has the following elements:
-\item{fig.down}{a figure of estimated trends for each group in "Downward"}
+\item{fig.down}{a figure of estimated trends for each group in "Downward";
+if the number of variables of downward group is larger than 16, this is a list of figures}
 
-\item{fig.up}{a figure of estimated trends for each group in "Upward"}
+\item{fig.up}{a figure of estimated trends for each group in "Upward";
+if the number of variables of upward group is larger than 16, this is a list of figures}
 
-\item{fig.flat}{a figure of estimated trends for each group in "Flat"}
+\item{fig.flat}{a figure of estimated trends for each group in "Flat";
+if the number of variables of flat group is larger than 16, this is a list of figures}
 
 \item{fig.icon}{summary}
 }

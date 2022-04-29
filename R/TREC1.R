@@ -15,9 +15,11 @@
 #' @param Y an observation matrix or data.frame; the row corresponds to time steps and the column corresponds to variables.
 #' @param time.points a column name of `Y` expressing time points, if need; default is `NULL`.
 #' @return a list of results for trend estimation which has the following elements:
-#' \item{fig.RawData}{a figure of raw data plot}
+#' \item{fig.RawData}{a figure of raw data plot;
+#'     if the number of variables is larger than 16, this is a list of figures}
 #'
-#' \item{fig.StdData}{a figure of standardized data plot}
+#' \item{fig.StdData}{a figure of standardized data plot;
+#'     if the number of variables is larger than 16, this is a list of figures}
 #'
 #' \item{fig.ctrend}{a figure of estimated trends with prediction band for each variable;
 #'     if the number of variables is larger than 16, this is a list of figures}
@@ -69,6 +71,7 @@ TREC1 <- function(Y, time.points=NULL){
   ###   Raw data plots
   ##############################################################################
 
+  Labs0 <- names(Y0)
   ggD1 <- data.frame(
     x = time.points,
     Y0
@@ -93,13 +96,13 @@ TREC1 <- function(Y, time.points=NULL){
     if(k %% div.n == 0)
     {
       div <- split(
-        Labs,
+        Labs0,
         rep(1:div.n, each=k / div.n)
       )
     } else
     {
       div <- split(
-        Labs,
+        Labs0,
         c(
           rep(1:div.n, k %/% div.n),
           1:(k %% div.n)
