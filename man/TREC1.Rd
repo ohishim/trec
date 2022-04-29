@@ -7,7 +7,7 @@
 TREC1(Y, time.points = NULL)
 }
 \arguments{
-\item{Y}{an observation matrix; the row corresponds to time steps and the column corresponds to variables.}
+\item{Y}{an observation matrix or data.frame; the row corresponds to time steps and the column corresponds to variables.}
 
 \item{time.points}{a column name of \code{Y} expressing time points, if need; default is \code{NULL}.}
 }

@@ -12,7 +12,7 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr mutate
 #' @importFrom plotly ggplotly
-#' @param Y an observation matrix; the row corresponds to time steps and the column corresponds to variables.
+#' @param Y an observation matrix or data.frame; the row corresponds to time steps and the column corresponds to variables.
 #' @param time.points a column name of `Y` expressing time points, if need; default is `NULL`.
 #' @return a list of results for trend estimation which has the following elements:
 #' \item{fig.RawData}{a figure of raw data plot}
