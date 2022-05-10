@@ -30,6 +30,7 @@ if the number of variables is larger than 16, this is a list of figures}
 
 \item{Vnames}{a relationship between the original variable names and
 the represented variable names}
+\item{empty}{empty variable names}
 }
 \description{
 \code{TREC1} This function estimates cubic trends for multivariate time series observations.

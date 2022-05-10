@@ -32,6 +32,7 @@
 #'
 #' \item{Vnames}{a relationship between the original variable names and
 #'     the represented variable names}
+#' \item{empty}{empty variable names}
 #' @export
 #' @examples
 #' #TREC1(Y)
@@ -46,6 +47,20 @@ TREC1 <- function(Y, time.points=NULL){
     time.idx <- which(colnames(Y) == time.points)
     time.points <- Y[,time.idx]
     Y <- Y[,-time.idx]
+  }
+
+  empty <- apply(Y, 2, function(x){all(is.na(x) | is.nan(x))}) %>% which
+
+  if(length(empty) > 0)
+  {
+    empvar <- colnames(Y)[empty]
+    Y <- Y[,-empty]
+
+    message("The following variable(s) is/are removed because of empty.")
+    print(empvar)
+  } else
+  {
+    empvar <- NULL
   }
 
   k <- ncol(Y)
@@ -128,9 +143,6 @@ TREC1 <- function(Y, time.points=NULL){
 
   Y <- miss.inpol(Y) %>% scale
 
-  idx.nan <- apply(Y, 2, function(y){all(is.nan(y))}) %>% which
-  if(length(idx.nan) > 0){Y <- Y[,-idx.nan]}
-
   p <- ncol(Y)
 
   if(p < k)
@@ -169,21 +181,21 @@ TREC1 <- function(Y, time.points=NULL){
       )
   } else
   {
-    div.n <- ceiling(k / 16)
+    div.n <- ceiling(p / 16)
 
-    if(k %% div.n == 0)
+    if(p %% div.n == 0)
     {
       div <- split(
         Labs,
-        rep(1:div.n, each=k / div.n)
+        rep(1:div.n, each=p / div.n)
       )
     } else
     {
       div <- split(
         Labs,
         c(
-          rep(1:div.n, k %/% div.n),
-          1:(k %% div.n)
+          rep(1:div.n, p %/% div.n),
+          1:(p %% div.n)
         ) %>% sort
       )
     }
@@ -270,7 +282,8 @@ TREC1 <- function(Y, time.points=NULL){
     fig.trend = ggplotly(fig.trend),
     argTREC = argTREC,
     remove = Vrm,
-    Vnames = Vnames
+    Vnames = Vnames,
+    empty = empvar
   )
 
   print(Out$fig.trend)
