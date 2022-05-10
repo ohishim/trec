@@ -51,6 +51,14 @@ TREC3 <- function(tvar, trn, argTREC){
 
   groups <- length(trn)
 
+  tvar <- lapply(1:groups, function(j){
+    trn[[j]][
+      trn[[j]] %in% tvar[[j]]
+    ] %>% factor(., levels=.)
+  }) %>% set_names(names(trn))
+
+  trn <- lapply(trn, function(x){factor(x, levels=x)})
+
   ggD3 <- argTREC$ggD3
 
   tr.n <- unlist(tvar) %>% length
@@ -77,7 +85,7 @@ TREC3 <- function(tvar, trn, argTREC){
     } else
     {
       TRj <- which(Labs %in% trn[[j]]) %>% TR[,.]
-      Labsj <- colnames(TRj)
+      Labsj <- trn[[j]]
       pj <- length(Labsj)
 
       tnumj <- which(Labsj %in% tvarj)
@@ -93,7 +101,7 @@ TREC3 <- function(tvar, trn, argTREC){
           out <- (TGTRj - TRj[,l]) %>% apply(2, function(x){sum(x^2)}) %>% which.min %>% tnumj[.]
         }
         return(out)
-      }) %>% Labsj[.]
+      }) %>% Labsj[.] %>% factor(levels=tvarj)
     }
   } #end for
 
@@ -109,8 +117,8 @@ TREC3 <- function(tvar, trn, argTREC){
     split <- tr.nj > 16
 
     ggD4 <- data.frame(
-      V = trn[[j]] %>% factor(., levels=.),
-      L = L[[j]] %>% factor(levels=tvar[[j]])
+      V = trn[[j]],
+      L = L[[j]]
     ) %>% left_join(ggD3, by="V")
 
     if(split)
@@ -192,11 +200,8 @@ TREC3 <- function(tvar, trn, argTREC){
     p <- nrow(res)
     ggD <- gather(res, 4:(n+3), key="t", value="y") %>%
       mutate(
-        x = seq(0, 1, length=n) %>% rep(each=p),
-        V = factor(V, levels=unique(V))
+        x = seq(0, 1, length=n) %>% rep(each=p)
       )
-
-    # yr <- ggD$y %>% range
 
     tvar.n <- length(tnumj)
 
@@ -217,13 +222,13 @@ TREC3 <- function(tvar, trn, argTREC){
     paths[[j]] <- paste0("icon", res$icon, ".png") %>%
       sapply(function(x){system.file(x, package="trec")})
 
-    group[[j]] <- split(trn[[j]], factor(L[[j]], levels=tvar[[j]]))
+    group[[j]] <- split(trn[[j]], L[[j]])
   } #end for
 
   fig.icon <- data.frame(
     tvar = unlist(tvar),
     g = lapply(1:groups, function(j){rep(names(trn)[[j]], length(tvar[[j]]))}) %>% unlist,
-    group = do.call(c, group) %>%  sapply(function(x){paste(x, collapse=", ")}),
+    group = do.call(c, group) %>% sapply(function(x){paste(x, collapse=", ")}),
     trend = 1,
     icon = 1
   ) %>% gt(rowname_col = "tvar", groupname_col = "g") %>%
