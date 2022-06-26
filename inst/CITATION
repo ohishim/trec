@@ -1,0 +1,16 @@
+citHeader("To cite trec in publications use:")
+
+citEntry(
+  entry    = "Manual",
+  title    = "trec: Trend estimation and classification for time series data",
+  author   = "Mineaki Ohishi and Hiroko Kato Solvang",
+  year     = 2022,
+  note     = "R package version 0.1.0",
+  url      = "https://github.com/ohishim/trec",
+  textVersion = paste("
+    Mineaki Ohishi and Hiroko Kato Solveng (2022).
+    trec: Trend estimation and classification for time series data.
+    R package version 0.1.0.
+    https://github.com/ohishim/trec
+  ")
+)
