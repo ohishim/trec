@@ -46,7 +46,7 @@ TREC1 <- function(Y, time.points=NULL){
   {
     time.idx <- which(colnames(Y) == time.points)
     time.points <- Y[,time.idx]
-    Y <- Y[,-time.idx]
+    Y <- Y[, -time.idx, drop=FALSE]
   }
 
   empty <- apply(Y, 2, function(x){all(is.na(x) | is.nan(x))}) %>% which
@@ -144,6 +144,8 @@ TREC1 <- function(Y, time.points=NULL){
   Y <- miss.inpol(Y) %>% scale
 
   p <- ncol(Y)
+
+  if(p == 0){stop("No variables are in a subject to analysis.")}
 
   if(p < k)
   {
