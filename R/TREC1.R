@@ -39,6 +39,8 @@
 
 TREC1 <- function(Y, time.points=NULL){
 
+  Y <- as.data.frame(Y)
+
   if(is.null(time.points))
   {
     time.points <- 1:nrow(Y)
