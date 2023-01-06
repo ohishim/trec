@@ -4,10 +4,12 @@
 \alias{miss.inpol}
 \title{Missing interpolation}
 \usage{
-miss.inpol(X)
+miss.inpol(X, remove.num)
 }
 \arguments{
 \item{X}{a matrix of an observed data.}
+
+\item{remove.num}{a variable, which has missing values of which the number is larger than \code{remove.num}, is removed.}
 }
 \value{
 a matrix of the observed data with a linear interpolation.

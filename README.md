@@ -38,6 +38,7 @@ If not, you can ignore the second parameter.
 In `TREC1`, the variable names of the dataset are automatically represented by V1, V2, ...
 A relationship between the original names and the represented names is automatically output on R console with the message `The variable names are represented as follows:`.
 If there are removed variables for estimation, they are also displayed.
+TREC1 has the third parameter `remove.num`, and a variable, which has missing values of which the number is larger than `remove.num`, is removed.
 You can obtain the represented and the removed variables by `res1$Vnames` and `res1$remove`, respectively.
 
 Moreover, you have a figure of all trends.

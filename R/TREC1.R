@@ -14,6 +14,8 @@
 #' @importFrom plotly ggplotly
 #' @param Y an observation matrix or data.frame; the row corresponds to time steps and the column corresponds to variables.
 #' @param time.points a column name of `Y` expressing time points, if need; default is `NULL`.
+#' @param remove.num a variable, which has missing values of which the number is larger than `remove.num`, is removed.
+#'      Default is the half of the number of time points.
 #' @return a list of results for trend estimation which has the following elements:
 #' \item{fig.RawData}{a figure of raw data plot;
 #'     if the number of variables is larger than 16, this is a list of figures}
@@ -37,7 +39,7 @@
 #' @examples
 #' #TREC1(Y)
 
-TREC1 <- function(Y, time.points=NULL){
+TREC1 <- function(Y, time.points=NULL, remove.num=NULL){
 
   Y <- as.data.frame(Y)
 
@@ -49,6 +51,11 @@ TREC1 <- function(Y, time.points=NULL){
     time.idx <- which(colnames(Y) == time.points)
     time.points <- Y[,time.idx]
     Y <- Y[, -time.idx, drop=FALSE]
+  }
+
+  if(is.null(remove.num))
+  {
+    remove.num <- nrow(Y) / 2
   }
 
   empty <- apply(Y, 2, function(x){all(is.na(x) | is.nan(x))}) %>% which
@@ -143,7 +150,7 @@ TREC1 <- function(Y, time.points=NULL){
   ###   Missing interpolation and standardization
   ##############################################################################
 
-  Y <- miss.inpol(Y) %>% scale
+  Y <- miss.inpol(Y, remove.num) %>% scale
 
   p <- ncol(Y)
 

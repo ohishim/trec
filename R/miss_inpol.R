@@ -4,11 +4,12 @@
 #' @importFrom stats approx
 #' @importFrom magrittr %>%
 #' @param X a matrix of an observed data.
+#' @param remove.num a variable, which has missing values of which the number is larger than `remove.num`, is removed.
 #' @return a matrix of the observed data with a linear interpolation.
 #' @examples
 #' #miss.inpol(X)
 
-miss.inpol <- function(X){
+miss.inpol <- function(X, remove.num){
 
   is.miss <- function(x){is.nan(x) | is.na(x)}
 
@@ -21,7 +22,7 @@ miss.inpol <- function(X){
     return(X)
   } else
   {
-    idx <- which(0 < miss.n & miss.n <= 11) %>%
+    idx <- which(0 < miss.n & miss.n <= remove.num) %>%
       sapply(function(j){
         if(!(X[c(1,n), j] %>% is.miss %>% any)){return(j)}
       }) %>% unlist

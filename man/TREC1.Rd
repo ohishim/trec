@@ -4,12 +4,15 @@
 \alias{TREC1}
 \title{The first step of TREC}
 \usage{
-TREC1(Y, time.points = NULL)
+TREC1(Y, time.points = NULL, remove.num = NULL)
 }
 \arguments{
 \item{Y}{an observation matrix or data.frame; the row corresponds to time steps and the column corresponds to variables.}
 
 \item{time.points}{a column name of \code{Y} expressing time points, if need; default is \code{NULL}.}
+
+\item{remove.num}{a variable, which has missing values of which the number is larger than \code{remove.num}, is removed.
+Default is the half of the number of time points.}
 }
 \value{
 a list of results for trend estimation which has the following elements:
