@@ -37,9 +37,14 @@ If the dataset has a variable expressing time points, you must enter the variabl
 If not, you can ignore the second parameter.
 In `TREC1`, the variable names of the dataset are automatically represented by V1, V2, ...
 A relationship between the original names and the represented names is automatically output on R console with the message `The variable names are represented as follows:`.
-If there are removed variables for estimation, they are also displayed.
-TREC1 has the third parameter `remove.num`, and a variable, which has missing values of which the number is larger than `remove.num`, is removed.
-You can obtain the represented and the removed variables by `res1$Vnames` and `res1$remove`, respectively.
+If there are removed variables from the TREC process, they are also displayed, where the following variables (corresponding to columns of input data) are removed:   
+
+- Either or both the start and end points are missing.  
+- The number of missing values is greater than "X", where "X" is a value given by the user.  
+
+For "X", `TREC1` has the third parameter `remove.num` by describing, e.g., `TREC1(exData, "year", 5)` if "X" is 5.
+The default of `remove.num` is set as half of row's number of input data. 
+You can obtain variable names of the represented and removed variables by `res1$Vnames` and `res1$remove`, respectively.
 
 Moreover, you have a figure of all trends.
 This figure can be reconstructed by `res1$fig.trend`.
