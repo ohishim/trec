@@ -15,7 +15,7 @@ https://github.com/ohishim/trec
 
 ## Installation
 
-You can install the development version of trec like so:
+You can install the R package trec like so:
 
 ``` r
 # install.packages("devtools")
