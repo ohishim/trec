@@ -111,5 +111,5 @@ Moreover, you can obtain trends of more concrete groups for each rough group by 
 
 ## References
 
-1. Solvang, H. K. & Ohishi, M. (2023). trec: An R package for trend estimation and classification to support integrated ecosystem assessment of the marine ecosystem and environmental factors. *SoftwareX* (in press). arXiv: [2209.06619](https://doi.org/10.48550/arXiv.2209.06619)  
+1. Solvang, H. K. & Ohishi, M. (2023). trec: An R package for trend estimation and classification to support integrated ecosystem assessment of the marine ecosystem and environmental factors. *SoftwareX*, **21**, 101309. doi: [10.1016/j.softx.2023.101309](https://doi.org/10.1016/j.softx.2023.101309)
 1. Solvang, H. K. & Planque, B. (2020). Estimation and classification of temporal trends to support integrated ecosystem assessment. *ICES J. Marine Sci.*, **77**, 2529 - 2540. doi: [10.1093/icesjms/fsaa111](https://doi.org/10.1093/icesjms/fsaa111)  
