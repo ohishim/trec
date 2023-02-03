@@ -1,13 +1,5 @@
-#' @title Missing interpolation
-#' @description \code{miss.inpol} This function takes a linear interpolation to missing data.
-#'
 #' @importFrom stats approx
 #' @importFrom magrittr %>%
-#' @param X a matrix of an observed data.
-#' @param remove.num a variable, which has missing values of which the number is larger than `remove.num`, is removed.
-#' @return a matrix of the observed data with a linear interpolation.
-#' @examples
-#' #miss.inpol(X)
 
 miss.inpol <- function(X, remove.num){
 

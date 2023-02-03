@@ -1,7 +1,7 @@
 Package: trec
 Type: Package
 Title: Trend estimation and classification for time series data
-Version: 1.0.0
+Version: 1.0.1
 Author: Mineaki Ohishi & Hiroko Kato Solvang
 Maintainer: Mineaki Ohishi <mineaki.ohishi.a4@tohoku.ac.jp> & Hiroko Kato Solvang <hiroko.solvang@hi.no>
 Description: This package is for fit cubic trends to multivariate time series observations and classify the trends.

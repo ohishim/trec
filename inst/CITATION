@@ -5,12 +5,12 @@ citEntry(
   title    = "trec: Trend estimation and classification for time series data",
   author   = "Ohishi M., Solvang H. K.",
   year     = 2023,
-  note     = "R package version 1.0.0",
+  note     = "R package version 1.0.1",
   url      = "https://github.com/ohishim/trec",
   textVersion = paste("
     Ohishi, M. & Solvang, H. K. (2023).
     trec: Trend estimation and classification for time series data.
-    R package version 1.0.0.
+    R package version 1.0.1.
     https://github.com/ohishim/trec
   ")
 )

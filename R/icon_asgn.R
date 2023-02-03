@@ -1,12 +1,4 @@
-#' @title Calculate fitted values
-#' @description \code{icon.fit} This function calculates fitted values.
-#'
 #' @importFrom magrittr %>%
-#' @param x a vector of explanatory variables.
-#' @param group Downward or Upward or Flat.
-#' @return a fitted value.
-#' @examples
-#' #icon.fit(x)
 
 icon.fit <- function(x, group){
 
