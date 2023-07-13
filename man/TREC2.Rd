@@ -2,7 +2,7 @@
 % Please edit documentation in R/TREC2.R
 \name{TREC2}
 \alias{TREC2}
-\title{The second step of TREC}
+\title{The second step of TREC (v1.1.0)}
 \usage{
 TREC2(argTREC, clustering = TRUE, pvar = NULL, groups = 2)
 }

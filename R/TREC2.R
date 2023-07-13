@@ -1,25 +1,14 @@
-#' @title The second step of TREC
+#' @title The second step of TREC (v1.1.0)
 #' @description \code{TREC2} This function performs rough classification of trends.
 #'
-#' @importFrom stats dist
-#' @importFrom stats hclust
-#' @importFrom stats as.dendrogram
-#' @importFrom stats cutree
+#' @importFrom stats as.dendrogram cutree dist hclust
 #' @importFrom graphics par
-#' @importFrom magrittr %>%
-#' @importFrom magrittr set_names
+#' @importFrom magrittr %>% %$% set_names
 #' @importFrom dendextend set
 #' @importFrom gridExtra grid.arrange
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 geom_line
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 ylim
+#' @importFrom ggplot2 geom_line ggplot theme ylim
 #' @importFrom plotly subplot
-#' @importFrom dplyr right_join
-#' @importFrom dplyr select
-#' @importFrom dplyr everything
-#' @importFrom dplyr mutate
-#' @importFrom dplyr case_when
+#' @importFrom dplyr arrange case_when everything mutate right_join select
 #' @importFrom rlist list.findi
 #' @param argTREC the output `argTREC` of `TREC1`
 #' @param clustering if `TRUE`, clustering by a dendorogram (default);
@@ -57,10 +46,13 @@ TREC2 <- function(argTREC, clustering=TRUE, pvar=NULL, groups=2){
     sum((t1 - TR[,j])^2) - sum((t2 - TR[,j])^2)
   }) %>% set_names(Labs)
 
+  Cols <- c( "#FC8D62", "#66C2A5", "#8DA0CB")[1:groups]
+  Pchs <- c(19, 17, 15)[1:groups]
+
   if(clustering)
   {
     HClust <- dd %>% dist %>% hclust(method = "centroid")
-    Dend <- HClust %>% as.dendrogram %>% set("branches_k_color", k=groups)
+    LabD <- as.dendrogram(HClust) %>% labels
 
     DUtr <- c(which.max(dd), which.min(dd)) %>% Labs[.]
     trn0 <- lapply(1:groups, function(j){which(cutree(HClust, k=groups) == j) %>% Labs[.]})
@@ -76,6 +68,19 @@ TREC2 <- function(argTREC, clustering=TRUE, pvar=NULL, groups=2){
 
       return(trn0[[idx]])
     }) %>% set_names(c("Downward", "Upward", "Flat")[1:groups])
+
+    pchn <- lapply(1:groups, function(x){cbind(a=which(LabD %in% trn0[[x]]), b=x)}) %>%
+      do.call(rbind, .) %>% as.data.frame %>% arrange(a) %>%
+      mutate(b = factor(b, levels=unique(b))) %$% split(a, b) %>%
+      sapply(length)
+
+    Dend <- HClust %>% as.dendrogram %>%
+      set("branches_k_color", k=groups, Cols) %>%
+      set(
+        "leaves_pch", mapply(rep, Pchs, pchn) %>% unlist
+      ) %>%
+      set("leaves_cex", 2) %>%
+      set("branches_lwd", 3)
 
     out0 <- function(){plot(Dend)}
     Gidx <- 1:groups

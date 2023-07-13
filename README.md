@@ -1,5 +1,5 @@
 
-# trec (v1.0.1)
+# trec (v1.1.0)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -10,7 +10,7 @@ When observations are inputted, you can obtain estimated trends and icons assign
 **cite this package**:  
 Ohishi, M. & Solvang, H. K. (2023). 
 trec: Trend estimation and classification for time series data.
-R package version 1.0.1. 
+R package version 1.1.0. 
 https://github.com/ohishim/trec
 
 ## Installation
